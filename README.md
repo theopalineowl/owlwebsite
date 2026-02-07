@@ -1,36 +1,84 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# The Opaline Owl
 
-## Getting Started
+Production-ready Next.js 14+ (App Router) + TypeScript + Tailwind marketing site with Sanity CMS. Content for blog posts and book reviews is managed in Sanity Studio at `/studio`.
 
-First, run the development server:
+## Prerequisites
+
+- Node.js 18+
+- A [Sanity](https://sanity.io) account (free tier is fine)
+
+## Environment variables
+
+Copy `.env.example` to `.env.local` and fill in your Sanity project details:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cp .env.example .env.local
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Required:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+| Variable | Description |
+|----------|-------------|
+| `NEXT_PUBLIC_SANITY_PROJECT_ID` | Your Sanity project ID (from [sanity.io/manage](https://sanity.io/manage)) |
+| `NEXT_PUBLIC_SANITY_DATASET` | Dataset name, e.g. `production` |
+| `NEXT_PUBLIC_SANITY_API_VERSION` | API version, e.g. `2024-01-01` |
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## Running locally
 
-## Learn More
+1. Install dependencies:
 
-To learn more about Next.js, take a look at the following resources:
+   ```bash
+   npm install
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+2. Start the Next.js dev server:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+   ```bash
+   npm run dev
+   ```
 
-## Deploy on Vercel
+3. Open:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+   - **Marketing site:** [http://localhost:3000](http://localhost:3000)
+   - **Sanity Studio (edit content):** [http://localhost:3000/studio](http://localhost:3000/studio)
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+On first visit to `/studio`, you’ll be prompted to log in to Sanity. Create a project or link an existing one; ensure the project ID and dataset in `.env.local` match.
+
+## Scripts
+
+| Command | Description |
+|---------|-------------|
+| `npm run dev` | Start Next.js dev server (site + Studio at `/studio`) |
+| `npm run build` | Build for production |
+| `npm run start` | Run production build locally |
+| `npm run lint` | Run ESLint |
+
+Optional: from the project root you can run Sanity CLI commands (e.g. `npx sanity cors add` for CORS, or `npx sanity deploy` to deploy Studio to Sanity’s hosting). The Studio is also served by Next.js at `/studio`, so CLI is only needed for schema/cors/deploy.
+
+## Deploying to Vercel
+
+1. Push the repo to GitHub (or another Git provider supported by Vercel).
+2. In [Vercel](https://vercel.com), create a new project and import the repo.
+3. Add the same environment variables in the Vercel project settings (Environment Variables):
+   - `NEXT_PUBLIC_SANITY_PROJECT_ID`
+   - `NEXT_PUBLIC_SANITY_DATASET`
+   - `NEXT_PUBLIC_SANITY_API_VERSION`
+4. Deploy. Build command: `next build` (default). The marketing site and Studio at `https://your-domain.com/studio` will both be served by the same deployment.
+
+## Project structure
+
+- `app/` – Next.js App Router (marketing pages under `(site)`, Studio under `(studio)`)
+- `components/` – Shared UI (layout, ui, blocks)
+- `lib/` – Utilities; `lib/sanity/` for client, image helper, GROQ queries, types
+- `sanity/` – Sanity Studio config and schemas (post, review, siteSettings)
+- `public/images/` – Static assets (e.g. logo)
+
+## Sanity desk structure
+
+In Studio you’ll see:
+
+- **Settings** – Singleton for site title, nav links, footer text, social links
+- **Blog Posts** – Blog posts (title, slug, body, cover image, etc.)
+- **Book Reviews** – Book reviews (title, slug, book author, cover, rating, body, etc.)
+
+Dataset is set to `production` in the plan; configure it in `.env.local` and in Sanity’s project settings if you use a different dataset.
