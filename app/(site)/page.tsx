@@ -25,6 +25,9 @@ export default async function HomePage() {
       </FadeInSection>
       <div className="home-dark">
         <FadeInSection delay={100}>
+          <ProfileSection reviews={reviews} />
+        </FadeInSection>
+        <FadeInSection delay={150}>
           <QuoteSection
             quote="The lips of wisdom are closed, except to the ears of Understanding."
             attribution="The Kybalion"
@@ -44,9 +47,6 @@ export default async function HomePage() {
         </FadeInSection>
         <FadeInSection delay={100}>
           <BenefitsSection />
-        </FadeInSection>
-        <FadeInSection delay={150}>
-          <ProfileSection reviews={reviews} />
         </FadeInSection>
         <FadeInSection delay={100}>
           <CTASection />
