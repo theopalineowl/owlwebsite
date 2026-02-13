@@ -28,25 +28,25 @@ export function ThreeStepsSection() {
       <DividerOrnament />
       <Section className="relative">
         <SectionTwinkles />
-        <h2 className="font-[var(--font-display)] text-3xl md:text-4xl font-semibold text-[var(--text-primary)] text-center mb-12">
+        <h2 className="font-[var(--font-display)] text-4xl md:text-6xl font-semibold text-[var(--text-primary)] text-center mb-16">
           Three Steps to Enhanced Spiritual Connection
         </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-10 max-w-5xl mx-auto">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-14 max-w-6xl mx-auto">
           {steps.map((step) => (
             <div
               key={step.num}
-              className="relative text-center px-6 py-8 rounded-xl bg-white/60 shadow-[var(--shadow-soft)] border border-[var(--accent-gold-muted)]/20"
+              className="relative text-center px-8 py-10 rounded-xl bg-white/60 shadow-[var(--shadow-soft)] border border-[var(--accent-gold-muted)]/20"
             >
               <span
-                className="absolute -top-3 left-1/2 -translate-x-1/2 w-8 h-8 rounded-full bg-[var(--accent-gold-muted)]/30 flex items-center justify-center text-sm font-semibold text-[var(--text-primary)]"
+                className="absolute -top-4 left-1/2 -translate-x-1/2 w-12 h-12 rounded-full bg-[var(--accent-gold-muted)]/30 flex items-center justify-center text-base font-semibold text-[var(--text-primary)]"
                 aria-hidden
               >
                 {step.num}
               </span>
-              <h3 className="font-[var(--font-display)] text-xl font-semibold text-[var(--text-primary)] mt-2 mb-3">
+              <h3 className="font-[var(--font-display)] text-2xl font-semibold text-[var(--text-primary)] mt-3 mb-4">
                 {step.title}
               </h3>
-              <p className="text-[var(--text-muted)] text-sm leading-relaxed italic">
+              <p className="text-[var(--text-muted)] text-base leading-relaxed italic">
                 {step.description}
               </p>
             </div>

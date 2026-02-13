@@ -27,9 +27,12 @@ export function ProfileSection({ reviews }: { reviews: ReviewListItem[] }) {
             </div>
           </div>
           <div className="order-1 md:order-2">
-            <h2 className="font-[var(--font-display)] text-3xl md:text-4xl font-semibold text-[var(--text-primary)] text-right mb-8">
+            <h2 className="font-[var(--font-display)] text-3xl md:text-4xl font-semibold text-[var(--text-primary)] text-right mb-4">
               Meet Jenny
             </h2>
+            <p className="text-[var(--text-muted)] text-base md:text-lg leading-relaxed text-right mb-8">
+              Jenny Nunez is the founder of The Opaline Owl, where spirituality meets grounded practice. She guides others toward balance and awareness through meditation, self-inquiry, and rituals rooted in tradition yet tailored to each seeker.
+            </p>
             <div className="flex flex-col gap-4">
               {reviews.slice(0, 3).map((review) => (
                 <Link
