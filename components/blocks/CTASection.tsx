@@ -14,7 +14,7 @@ export function CTASection() {
           href="/courses"
           className="!text-white !bg-[var(--accent-gold)]/90 hover:!bg-[var(--accent-gold)]"
         >
-          Join the Journey
+          Join the Journey!
         </Button>
       </div>
     </Section>
