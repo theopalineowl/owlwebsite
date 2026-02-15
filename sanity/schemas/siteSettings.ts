@@ -5,6 +5,7 @@ export const siteSettings = defineType({
   title: "Site Settings",
   type: "document",
   options: {
+    // @ts-expect-error singleton is valid at runtime; not in DocumentOptions type
     singleton: true,
   },
   fields: [

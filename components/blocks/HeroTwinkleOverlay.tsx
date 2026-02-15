@@ -40,11 +40,11 @@ export function HeroTwinkleOverlay() {
           style={{
             top: spot.top,
             bottom: spot.bottom,
-            left: spot.left,
-            right: spot.right,
+            left: "left" in spot ? spot.left : undefined,
+            right: "right" in spot ? spot.right : undefined,
           }}
         >
-          <Twinkle size={spot.size} variant="ambient" />
+          <Twinkle size={spot.size} />
         </span>
       ))}
     </div>

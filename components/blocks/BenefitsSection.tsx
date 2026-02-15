@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Section } from "@/components/layout/Section";
 import { DividerOrnament } from "@/components/ui/DividerOrnament";
 import { SectionTwinkles } from "@/components/ui/SectionTwinkles";
@@ -28,7 +29,7 @@ export function BenefitsSection() {
               key={label}
               className="inline-flex items-center gap-2 rounded-full bg-[var(--accent-gold-muted)]/25 px-6 py-3 text-base md:text-lg text-[var(--text-primary)] font-medium border border-[var(--accent-gold-muted)]/40"
             >
-              <img
+              <Image
                 src={icon}
                 alt=""
                 width={24}

@@ -7,7 +7,7 @@ export function DividerOrnament({ className = "" }: { className?: string }) {
       aria-hidden
     >
       <span className="h-px w-12 bg-[var(--text-muted)]/30" />
-      <Twinkle size={20} variant="divider" />
+      <Twinkle size={20} />
       <span className="h-px w-12 bg-[var(--text-muted)]/30" />
     </div>
   );

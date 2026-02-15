@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 import { client } from "@/lib/sanity/client";
 import { postsQuery } from "@/lib/sanity/queries";
 import { urlFor } from "@/lib/sanity/image";
@@ -49,7 +48,7 @@ export default async function BlogListPage() {
             posts.map((post) => (
               <Card key={post._id} href={`/blog/${post.slug}`}>
                 <div className="flex flex-col md:flex-row gap-6">
-                  {post.coverImage && (
+                  {post.coverImage != null ? (
                     <div className="relative w-full md:w-48 h-40 md:h-32 shrink-0 rounded-lg overflow-hidden">
                       <Image
                         src={urlFor(post.coverImage).width(400).height(260).url()}
@@ -59,7 +58,7 @@ export default async function BlogListPage() {
                         sizes="(max-width: 768px) 100vw, 192px"
                       />
                     </div>
-                  )}
+                  ) : null}
                   <div className="min-w-0 flex-1">
                     <h2 className="font-[var(--font-display)] text-xl font-semibold text-[var(--text-primary)] mb-2">
                       {post.title}
