@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 
 /** Soft opaline white with slight teal tint; opacity controlled by animation (max 0.6) */
 const TWINKLE_FILL = "#e8f5f3";
@@ -8,28 +8,37 @@ const TWINKLE_FILL = "#e8f5f3";
 type TwinkleProps = {
   size?: number;
   className?: string;
-  variant?: "divider" | "ambient";
 };
 
-export function Twinkle({ size = 24, className = "", variant = "divider" }: TwinkleProps) {
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(true);
-  const styleRef = useRef<{ duration: number; delay: number } | null>(null);
+export function Twinkle({ size = 24, className = "" }: TwinkleProps) {
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(() =>
+    typeof window !== "undefined"
+      ? window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      : true
+  );
+  const [animParams, setAnimParams] = useState<{ duration: number; delay: number }>(() => ({
+    duration: 5000,
+    delay: 1000,
+  }));
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setPrefersReducedMotion(mq.matches);
     const handler = () => setPrefersReducedMotion(mq.matches);
     mq.addEventListener("change", handler);
     return () => mq.removeEventListener("change", handler);
   }, []);
 
-  if (styleRef.current === null) {
-    styleRef.current = {
-      duration: 4000 + Math.random() * 2000,
-      delay: Math.random() * 2000,
-    };
-  }
-  const { duration, delay } = styleRef.current;
+  useEffect(() => {
+    const id = setTimeout(() => {
+      setAnimParams({
+        duration: 4000 + Math.random() * 2000,
+        delay: Math.random() * 2000,
+      });
+    }, 0);
+    return () => clearTimeout(id);
+  }, []);
+
+  const { duration, delay } = animParams;
 
   const animate = !prefersReducedMotion;
   const animationStyle = animate
@@ -40,7 +49,7 @@ export function Twinkle({ size = 24, className = "", variant = "divider" }: Twin
     <span
       aria-hidden="true"
       className={`inline-block pointer-events-none select-none ${className}`}
-      style={{ width: size, height: size, ...animationStyle }}
+      style={{ width: `${size}px`, height: `${size}px`, ...animationStyle }}
     >
       <svg
         viewBox="0 0 512 512"

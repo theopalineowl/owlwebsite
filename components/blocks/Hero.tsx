@@ -1,3 +1,4 @@
+import Image from "next/image";
 import { Button } from "@/components/ui/Button";
 import { HeroBackgroundVideo } from "./HeroBackgroundVideo";
 import { HeroTwinkleOverlay } from "./HeroTwinkleOverlay";
@@ -30,14 +31,18 @@ export function Hero() {
         className="absolute inset-x-0 bottom-[50%] top-0 flex justify-center pointer-events-none z-0"
         aria-hidden="true"
       >
-        <img
-          src="/images/logo.png"
-          alt=""
-          className="w-[min(55vw,420px)] h-auto max-h-[85vh] object-contain object-bottom opacity-[0.2] select-none"
-          style={{
-            filter: "invert(1) brightness(1.4) grayscale(1)",
-          }}
-        />
+        <div className="relative w-[min(55vw,420px)] h-[35vh] max-h-[85vh]">
+          <Image
+            src="/images/logo.png"
+            alt=""
+            fill
+            className="object-contain object-bottom opacity-[0.2] select-none"
+            style={{
+              filter: "invert(1) brightness(1.4) grayscale(1)",
+            }}
+            sizes="(max-width: 768px) 55vw, 420px"
+          />
+        </div>
       </div>
       <HeroTwinkleOverlay />
     </section>

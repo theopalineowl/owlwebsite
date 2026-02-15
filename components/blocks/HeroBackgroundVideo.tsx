@@ -8,7 +8,11 @@ const CROSSFADE_DURATION_MS = 1800;
 const CROSSFADE_TRIGGER_S = 2; // start crossfade when this many seconds left
 
 export function HeroBackgroundVideo() {
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(true);
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(() =>
+    typeof window !== "undefined"
+      ? window.matchMedia("(prefers-reduced-motion: reduce)").matches
+      : true
+  );
   const refA = useRef<HTMLVideoElement>(null);
   const refB = useRef<HTMLVideoElement>(null);
   const [active, setActive] = useState<"A" | "B">("A");
@@ -19,7 +23,6 @@ export function HeroBackgroundVideo() {
 
   useEffect(() => {
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setPrefersReducedMotion(mq.matches);
     const handler = () => setPrefersReducedMotion(mq.matches);
     mq.addEventListener("change", handler);
     return () => mq.removeEventListener("change", handler);

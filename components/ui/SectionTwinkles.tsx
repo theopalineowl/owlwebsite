@@ -41,7 +41,7 @@ export function SectionTwinkles({ spots = DEFAULT_SPOTS }: { spots?: Spot[] }) {
             right: spot.right,
           }}
         >
-          <Twinkle size={spot.size} variant="ambient" />
+          <Twinkle size={spot.size} />
         </span>
       ))}
     </div>

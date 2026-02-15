@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 import { client } from "@/lib/sanity/client";
 import { reviewsQuery } from "@/lib/sanity/queries";
 import { urlFor } from "@/lib/sanity/image";
