@@ -10,37 +10,30 @@ type TwinkleProps = {
   className?: string;
 };
 
+// SSR-safe: initial render must match server (no animation). Apply animation only after mount.
+const DEFAULT_ANIM = { duration: 5000, delay: 1000 };
+
 export function Twinkle({ size = 24, className = "" }: TwinkleProps) {
-  const [prefersReducedMotion, setPrefersReducedMotion] = useState(() =>
-    typeof window !== "undefined"
-      ? window.matchMedia("(prefers-reduced-motion: reduce)").matches
-      : true
-  );
-  const [animParams, setAnimParams] = useState<{ duration: number; delay: number }>(() => ({
-    duration: 5000,
-    delay: 1000,
-  }));
+  const [prefersReducedMotion, setPrefersReducedMotion] = useState(true);
+  const [animParams, setAnimParams] = useState(DEFAULT_ANIM);
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
+    setMounted(true);
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+    setPrefersReducedMotion(mq.matches);
+    setAnimParams({
+      duration: 4000 + Math.random() * 2000,
+      delay: Math.random() * 2000,
+    });
     const handler = () => setPrefersReducedMotion(mq.matches);
     mq.addEventListener("change", handler);
     return () => mq.removeEventListener("change", handler);
   }, []);
 
-  useEffect(() => {
-    const id = setTimeout(() => {
-      setAnimParams({
-        duration: 4000 + Math.random() * 2000,
-        delay: Math.random() * 2000,
-      });
-    }, 0);
-    return () => clearTimeout(id);
-  }, []);
-
   const { duration, delay } = animParams;
 
-  const animate = !prefersReducedMotion;
+  const animate = mounted && !prefersReducedMotion;
   const animationStyle = animate
     ? { animation: `twinkle-pulse ${duration}ms ease-in-out ${delay}ms infinite` }
     : { opacity: 0.5 };

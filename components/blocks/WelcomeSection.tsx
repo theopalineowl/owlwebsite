@@ -12,8 +12,8 @@ export function WelcomeSection() {
       <DividerOrnament />
       <Section className="relative">
         <SectionTwinkles />
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-12 md:gap-16 max-w-5xl mx-auto items-center">
-          <div>
+        <div className="max-w-2xl ml-auto text-right flex flex-col md:flex-row md:items-center md:justify-end gap-10 md:gap-12">
+          <div className="md:max-w-[min(100%,20rem)]">
             <h2 className="font-[var(--font-display)] text-3xl md:text-4xl font-semibold text-[var(--text-primary)] mb-6">
               Welcome to The Opaline Owl
             </h2>
@@ -27,7 +27,7 @@ export function WelcomeSection() {
               Read more →
             </Link>
           </div>
-          <div className="flex justify-center md:justify-end">
+          <div className="flex justify-center md:flex-shrink-0">
             <div className="relative w-48 h-48 md:w-56 md:h-56 rounded-full overflow-hidden bg-[#f5f0e6] shadow-[var(--shadow-lift)] ring-2 ring-[var(--accent-gold-muted)]/30">
               <Image
                 src="/images/logo.png"

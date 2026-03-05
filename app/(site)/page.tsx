@@ -4,10 +4,9 @@ import type { ReviewListItem } from "@/lib/sanity/types";
 import { FadeInSection } from "@/components/ui/FadeInSection";
 import { Hero } from "@/components/blocks/Hero";
 import { QuoteSection } from "@/components/blocks/QuoteSection";
-import { WelcomeSection } from "@/components/blocks/WelcomeSection";
 import { ThreeStepsSection } from "@/components/blocks/ThreeStepsSection";
 import { BenefitsSection } from "@/components/blocks/BenefitsSection";
-import { ProfileSection } from "@/components/blocks/ProfileSection";
+import { MeetAndWelcomeSection } from "@/components/blocks/MeetAndWelcomeSection";
 import { CTASection } from "@/components/blocks/CTASection";
 
 export default async function HomePage() {
@@ -25,16 +24,13 @@ export default async function HomePage() {
       </FadeInSection>
       <div className="home-dark">
         <FadeInSection delay={100}>
-          <ProfileSection reviews={reviews} />
+          <MeetAndWelcomeSection reviews={reviews} />
         </FadeInSection>
         <FadeInSection delay={150}>
           <QuoteSection
             quote="The lips of wisdom are closed, except to the ears of Understanding."
             attribution="The Kybalion"
           />
-        </FadeInSection>
-        <FadeInSection delay={150}>
-          <WelcomeSection />
         </FadeInSection>
         <FadeInSection delay={200}>
           <ThreeStepsSection />
