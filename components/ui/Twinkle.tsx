@@ -19,16 +19,21 @@ export function Twinkle({ size = 24, className = "" }: TwinkleProps) {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    setMounted(true);
     const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
-    setPrefersReducedMotion(mq.matches);
-    setAnimParams({
-      duration: 4000 + Math.random() * 2000,
-      delay: Math.random() * 2000,
-    });
     const handler = () => setPrefersReducedMotion(mq.matches);
     mq.addEventListener("change", handler);
-    return () => mq.removeEventListener("change", handler);
+    const id = requestAnimationFrame(() => {
+      setMounted(true);
+      setPrefersReducedMotion(mq.matches);
+      setAnimParams({
+        duration: 4000 + Math.random() * 2000,
+        delay: Math.random() * 2000,
+      });
+    });
+    return () => {
+      cancelAnimationFrame(id);
+      mq.removeEventListener("change", handler);
+    };
   }, []);
 
   const { duration, delay } = animParams;
