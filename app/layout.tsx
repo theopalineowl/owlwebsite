@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Lora } from "next/font/google";
+import { Playfair_Display, Lora, Mystery_Quest } from "next/font/google";
 import "./globals.css";
 
 const fontDisplay = Playfair_Display({
@@ -10,6 +10,13 @@ const fontDisplay = Playfair_Display({
 
 const fontBody = Lora({
   variable: "--font-body",
+  subsets: ["latin"],
+  display: "swap",
+});
+
+const fontMagic = Mystery_Quest({
+  variable: "--font-magic",
+  weight: "400",
   subsets: ["latin"],
   display: "swap",
 });
@@ -26,7 +33,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={`${fontDisplay.variable} ${fontBody.variable}`}>
+    <html lang="en" className={`${fontDisplay.variable} ${fontBody.variable} ${fontMagic.variable}`}>
       <body className="antialiased font-sans" suppressHydrationWarning>
         <div className="grain-overlay" aria-hidden />
         {children}

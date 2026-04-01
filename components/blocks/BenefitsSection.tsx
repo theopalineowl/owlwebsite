@@ -3,10 +3,6 @@ import { Section } from "@/components/layout/Section";
 import { DividerOrnament } from "@/components/ui/DividerOrnament";
 import { SectionTwinkles } from "@/components/ui/SectionTwinkles";
 
-/* Theme yellow #fef9c3 (--text-muted in .home-dark) */
-const BENEFIT_ICON_YELLOW_FILTER =
-  "brightness(0) saturate(100%) invert(92%) sepia(45%) saturate(1492%) hue-rotate(330deg)";
-
 const benefits: { label: string; icon: string }[] = [
   { label: "Guidance", icon: "/images/Crystal Ball.svg" },
   { label: "Strength & Healing", icon: "/images/Magic Potion.svg" },
@@ -27,15 +23,14 @@ export function BenefitsSection() {
           {benefits.map(({ label, icon }) => (
             <span
               key={label}
-              className="inline-flex items-center gap-2 rounded-full bg-[var(--accent-gold-muted)]/25 px-6 py-3 text-base md:text-lg text-[var(--text-primary)] font-medium border border-[var(--accent-gold-muted)]/40"
+              className="inline-flex items-center gap-2 rounded-full bg-[#4b5563] px-6 py-3 text-base md:text-lg text-[var(--text-primary)] font-medium"
             >
               <Image
                 src={icon}
                 alt=""
                 width={24}
                 height={24}
-                className="size-6 shrink-0 object-contain"
-                style={{ filter: BENEFIT_ICON_YELLOW_FILTER }}
+                className="size-6 shrink-0 object-contain step-icon-violet"
               />
               {label}
             </span>
