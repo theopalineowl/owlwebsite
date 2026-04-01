@@ -122,6 +122,19 @@ body {
   animation: journey-glow 4s ease-in-out infinite;
 }
 
+/* Journey hero owls: slow float; respect reduced motion */
+.journey-owl-float {
+  animation: journey-float 8s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .journey-owl-float {
+    animation: none;
+  }
+  .journey-card {
+    animation: none;
+  }
+}
+
 /* Grain overlay */
 .grain-overlay {
   position: fixed;
@@ -130,4 +143,86 @@ body {
   z-index: 9999;
   opacity: 0.04;
   background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
+}
+
+/* About page: cosmic mist + tarot (scoped) */
+@keyframes about-mist-drift {
+  0%,
+  100% {
+    transform: translate(0, 0) scale(1);
+    opacity: 0.85;
+  }
+  33% {
+    transform: translate(4%, -3%) scale(1.03);
+    opacity: 0.95;
+  }
+  66% {
+    transform: translate(-3%, 2%) scale(0.98);
+    opacity: 0.88;
+  }
+}
+
+@keyframes about-particle-float {
+  0%,
+  100% {
+    opacity: 0.35;
+    transform: translateY(0);
+  }
+  50% {
+    opacity: 0.75;
+    transform: translateY(-8px);
+  }
+}
+
+.about-mystical {
+  color: #faf8f5;
+  --about-ivory: #faf8f5;
+  --about-muted: #e9d5ff;
+}
+
+.about-mist {
+  animation: about-mist-drift 32s ease-in-out infinite;
+}
+
+.about-mist-b {
+  animation-duration: 38s;
+  animation-direction: alternate;
+}
+
+.about-particle {
+  animation: about-particle-float 6s ease-in-out infinite;
+}
+
+/* Black line SVG → warm gold */
+.about-icon-gold {
+  filter: brightness(0) saturate(100%) invert(88%) sepia(22%) saturate(900%)
+    hue-rotate(5deg) brightness(98%) contrast(92%);
+}
+
+.about-tarot-card {
+  animation: journey-float 9s ease-in-out infinite;
+  box-shadow:
+    0 0 0 1px rgba(251, 191, 36, 0.12),
+    0 0 36px rgba(126, 58, 237, 0.18),
+    0 20px 48px rgba(0, 0, 0, 0.4);
+}
+
+.about-tarot-card:hover {
+  box-shadow:
+    0 0 0 1px rgba(251, 191, 36, 0.28),
+    0 0 52px rgba(167, 139, 250, 0.28),
+    0 26px 56px rgba(0, 0, 0, 0.45);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .about-mist {
+    animation: none;
+  }
+  .about-particle {
+    animation: none;
+    opacity: 0.5;
+  }
+  .about-tarot-card {
+    animation: none;
+  }
 }
