@@ -6,9 +6,9 @@ import { NavTabs } from "@/components/layout/NavTabs";
 const defaultNavLinks = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
+  { label: "The Journey", href: "/courses" },
   { label: "Blog", href: "/blog" },
   { label: "Book Reviews", href: "/book-reviews" },
-  { label: "Courses", href: "/courses" },
   { label: "Contact", href: "/contact" },
 ];
 

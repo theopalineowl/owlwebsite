@@ -5,7 +5,7 @@
   --color-parchment: #eef2f7;
   --text-primary: #1e293b;
   --text-muted: #475569;
-  /* Accent: nav active tab, primary buttons (e.g. Join the Journey), links. Change here to update site-wide. */
+  /* Accent: nav active tab, primary buttons (e.g. The Journey), links. Change here to update site-wide. */
   --accent-gold: #62638e;
   --accent-gold-muted: #a5b6af;
   --shadow-soft: 0 4px 20px rgba(30, 41, 59, 0.08);
@@ -23,6 +23,22 @@ body {
   background: var(--bg-parchment);
   color: var(--text-primary);
   font-family: var(--font-body), Georgia, serif;
+}
+
+.magic-title {
+  font-family: var(--font-magic), cursive;
+  font-size: 48px;
+  letter-spacing: 0.15em;
+}
+
+/* Soft glow for magical link arrow */
+.learn-more-arrow {
+  text-shadow: 0 0 8px rgba(98, 99, 142, 0.5), 0 0 12px rgba(98, 99, 142, 0.3);
+}
+
+/* Violet purple tint for step icons (black SVG → violet) */
+.step-icon-violet {
+  filter: brightness(0) saturate(100%) invert(42%) sepia(93%) saturate(1200%) hue-rotate(244deg) brightness(95%) contrast(95%);
 }
 
 /* Cinematic hero: soft fade-in */
@@ -85,6 +101,25 @@ body {
 .home-dark .rounded-xl,
 .home-dark .rounded-lg {
   border-color: rgba(255, 255, 255, 0.12);
+}
+
+/* Journey page: subtle spiritual animations */
+@keyframes journey-float {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-4px); }
+}
+@keyframes journey-glow {
+  0%, 100% { box-shadow: 0 0 20px rgba(126, 58, 237, 0.15), 0 0 40px rgba(126, 58, 237, 0.05); }
+  50% { box-shadow: 0 0 28px rgba(126, 58, 237, 0.22), 0 0 50px rgba(126, 58, 237, 0.08); }
+}
+.journey-card {
+  animation: journey-float 6s ease-in-out infinite;
+}
+.journey-card:nth-child(1) { animation-delay: 0s; }
+.journey-card:nth-child(2) { animation-delay: 0.5s; }
+.journey-card:nth-child(3) { animation-delay: 1s; }
+.journey-glow {
+  animation: journey-glow 4s ease-in-out infinite;
 }
 
 /* Grain overlay */

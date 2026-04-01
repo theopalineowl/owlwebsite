@@ -19,7 +19,7 @@ export function Hero() {
               Welcome to
             </p>
             <p
-              className="font-[var(--font-display)] text-4xl md:text-5xl lg:text-6xl xl:text-7xl font-semibold text-white leading-tight tracking-[0.06em] uppercase mt-1"
+              className="magic-title font-semibold text-white leading-tight uppercase mt-1 md:text-5xl lg:text-6xl xl:text-7xl"
               style={{ textShadow: "0 2px 24px rgba(0,0,0,0.35)" }}
             >
               The Opaline Owl
