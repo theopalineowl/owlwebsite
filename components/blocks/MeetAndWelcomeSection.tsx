@@ -7,7 +7,7 @@ import { urlFor } from "@/lib/sanity/image";
 import { formatDate } from "@/lib/sanity/format";
 import type { ReviewListItem } from "@/lib/sanity/types";
 
-const welcomeBodyCopy = `Everything vibrates. Nothing is ever truly still. Here, spirituality is both mystical and grounded: rooted in balance, awareness, and practices that meet you where you are.`;
+const welcomeBodyCopy = `Here, spirituality is both mystical and grounded: rooted in balance, awareness, and practices that meet you where you are.`;
 
 export function MeetAndWelcomeSection({ reviews }: { reviews: ReviewListItem[] }) {
   return (
@@ -17,25 +17,25 @@ export function MeetAndWelcomeSection({ reviews }: { reviews: ReviewListItem[] }
         <SectionTwinkles />
         {/* Vertical stack: Welcome → subtext → Logo → Meet Jenny (text left, headshot right) */}
         <div className="flex flex-col gap-10 md:gap-12 max-w-3xl mx-auto text-center">
-          <div>
-            <h2 className="font-[var(--font-display)] text-3xl md:text-4xl font-semibold text-[var(--text-primary)] mb-6">
-              Welcome to The Opaline Owl
-            </h2>
-            <p className="text-[var(--text-muted)] leading-relaxed whitespace-pre-line">
-              {welcomeBodyCopy}
-            </p>
-          </div>
+          <div className="flex flex-col gap-5 md:gap-6">
+            <div>
+              <h2 className="font-[var(--font-display)] text-3xl md:text-4xl font-semibold text-[var(--text-primary)] mb-6">
+                Welcome to The Opaline Owl
+              </h2>
+              <p className="text-[130%] text-[var(--text-muted)] leading-relaxed whitespace-pre-line">
+                {welcomeBodyCopy}
+              </p>
+            </div>
 
-          {/* Logo — inner padding so circle doesn't clip the logo */}
-          <div className="flex justify-center">
-            <div className="relative w-56 h-56 md:w-64 md:h-64 rounded-full overflow-hidden bg-[#f5f0e6] shadow-[var(--shadow-lift)] ring-2 ring-[var(--accent-gold-muted)]/30 flex-shrink-0">
-              <div className="absolute inset-4 md:inset-5">
+            {/* Logo — 2× prior 14rem / 16rem footprint */}
+            <div className="flex justify-center px-1">
+              <div className="relative aspect-square w-[min(28rem,92vw)] shrink-0 md:w-[32rem]">
                 <Image
-                  src="/images/logo.png"
+                  src="/images/logohero.png"
                   alt="The Opaline Owl"
                   fill
-                  sizes="(max-width: 768px) 192px, 224px"
-                  className="object-contain"
+                  sizes="(max-width: 768px) min(448px, 92vw), 512px"
+                  className="object-contain object-center drop-shadow-[0_8px_28px_rgba(30,41,59,0.14)]"
                 />
               </div>
             </div>
@@ -93,7 +93,7 @@ export function MeetAndWelcomeSection({ reviews }: { reviews: ReviewListItem[] }
             </div>
             <div className="relative aspect-[3/4] max-w-sm mx-auto md:mx-0 md:max-w-none rounded-xl overflow-hidden bg-[#374151] shadow-[var(--shadow-lift)]">
               <Image
-                src="/images/jennyheadshot.jpg"
+                src="/images/sitting.jpg"
                 alt="Jenny Nunez"
                 fill
                 className="object-cover"

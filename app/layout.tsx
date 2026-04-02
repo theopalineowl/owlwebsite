@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Playfair_Display, Lora, Mystery_Quest } from "next/font/google";
+import { Cormorant_Garamond, Playfair_Display, Lora } from "next/font/google";
 import "./globals.css";
 
 const fontDisplay = Playfair_Display({
@@ -14,11 +14,11 @@ const fontBody = Lora({
   display: "swap",
 });
 
-const fontMagic = Mystery_Quest({
+const fontMagic = Cormorant_Garamond({
   variable: "--font-magic",
-  weight: "400",
   subsets: ["latin"],
   display: "swap",
+  weight: ["400", "500", "600", "700"],
 });
 
 export const metadata: Metadata = {
