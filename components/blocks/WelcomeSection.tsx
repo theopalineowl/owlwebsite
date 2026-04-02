@@ -4,7 +4,7 @@ import { DividerOrnament } from "@/components/ui/DividerOrnament";
 import { SectionTwinkles } from "@/components/ui/SectionTwinkles";
 import Link from "next/link";
 
-const bodyCopy = `Everything vibrates. Nothing is ever truly still. Here, spirituality is both mystical and grounded: rooted in balance, awareness, and practices that meet you where you are.`;
+const bodyCopy = `vibrates. Nothing is ever truly still. Here, spirituality is both mystical and grounded: rooted in balance, awareness, and practices that meet you where you are.`;
 
 export function WelcomeSection() {
   return (

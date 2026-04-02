@@ -26,9 +26,8 @@ body {
 }
 
 .magic-title {
-  font-family: var(--font-magic), cursive;
-  font-size: 48px;
-  letter-spacing: 0.15em;
+  font-family: var(--font-magic), "Times New Roman", Times, serif;
+  letter-spacing: 0.14em;
 }
 
 /* Soft glow for magical link arrow */
