@@ -9,6 +9,12 @@ import {
   TarotPillarCard,
   type TarotPillar,
 } from "@/components/about/TarotPillarCard";
+import {
+  aboutClosing,
+  aboutHeroTitle,
+  aboutPillarsHeading,
+  aboutStoryParagraphs,
+} from "./about-copy";
 
 const MOON_SVG = "/images/Crescent%20Moon%20and%20Star.svg";
 
@@ -41,6 +47,20 @@ const owlClass =
 
 const portraitClass =
   "relative z-[1] w-full max-w-[min(280px,85vw)] md:max-w-[min(320px,28vw)] h-auto object-contain object-top drop-shadow-[0_0_52px_rgba(196,181,253,0.42)] motion-reduce:drop-shadow-none transition-transform duration-500 motion-reduce:transition-none md:group-hover:scale-[1.01]";
+
+/** Visual style per story block — keep in sync with `aboutStoryParagraphs` length. */
+const STORY_P_CLASS = [
+  "font-[var(--font-body)] text-lg leading-[1.75] text-stone-100 md:text-xl [text-shadow:0_1px_24px_rgba(0,0,0,0.45)]",
+  "font-[var(--font-body)] text-base leading-[1.8] text-violet-100/95 md:text-lg",
+  "font-[var(--font-body)] text-base leading-[1.8] text-stone-200/95 md:text-lg",
+  "font-[var(--font-body)] text-base leading-[1.8] text-violet-100/95 md:text-lg",
+  "font-[var(--font-display)] text-xl leading-snug text-amber-50 md:text-2xl [text-shadow:0_0_20px_rgba(126,58,237,0.35)]",
+  "font-[var(--font-display)] text-xl font-semibold leading-snug text-stone-50 md:text-2xl",
+  "font-[var(--font-body)] text-base leading-[1.8] text-violet-100/95 md:text-lg",
+  "font-[var(--font-body)] text-base leading-[1.8] text-stone-200/95 md:text-lg",
+] as const;
+
+const STORY_DELAYS_MS = [60, 100, 140, 180, 220, 260, 300, 340] as const;
 
 function StarFlourish({ className = "" }: { className?: string }) {
   return (
@@ -96,7 +116,7 @@ export default function AboutPage() {
                         textShadow: "0 0 36px rgba(126, 58, 237, 0.45)",
                       }}
                     >
-                      Meet the Owl!
+                      {aboutHeroTitle}
                     </h1>
                     <div className="relative">
                       <div
@@ -104,7 +124,7 @@ export default function AboutPage() {
                         aria-hidden
                       />
                       <Image
-                        src="/images/framejenny1.png"
+                        src="/images/framejenny3.png"
                         alt="Jenny N"
                         width={640}
                         height={800}
@@ -144,69 +164,17 @@ export default function AboutPage() {
           {/* Poetic story */}
           <section
             id="about-story"
-            className="mx-auto max-w-prose space-y-10 text-center md:space-y-12 mb-4 md:mb-6"
+            className="mx-auto w-full max-w-5xl lg:max-w-6xl space-y-12 text-center text-pretty md:space-y-16 lg:space-y-20 mb-4 md:mb-6"
             aria-labelledby="about-story-h2"
           >
             <h2 id="about-story-h2" className="sr-only">
               Jenny&apos;s path
             </h2>
-            <FadeInSection delay={60}>
-              <p className="font-[var(--font-body)] text-lg leading-relaxed text-stone-100 md:text-xl whitespace-pre-line [text-shadow:0_1px_24px_rgba(0,0,0,0.45)]">
-                {`A modern witch.
-An educator.
-A spiritual guide.`}
-              </p>
-            </FadeInSection>
-            <FadeInSection delay={100}>
-              <p className="font-[var(--font-body)] text-base leading-relaxed text-violet-100/95 md:text-lg whitespace-pre-line">
-                {`She walks with seekers toward
-a conscious relationship with Source Energy.`}
-              </p>
-            </FadeInSection>
-            <FadeInSection delay={140}>
-              <p className="font-[var(--font-body)] text-base leading-relaxed text-stone-200/95 md:text-lg whitespace-pre-line">
-                {`English teacher, librarian—
-mindfulness, yoga, Reiki:
-intellect and intuition, woven together.`}
-              </p>
-            </FadeInSection>
-            <FadeInSection delay={180}>
-              <p className="font-[var(--font-body)] text-base leading-relaxed text-violet-100/95 md:text-lg whitespace-pre-line">
-                {`Her path was not linear.
-Clarity and confusion.
-Epiphany and despair—
-a deeply human unfolding.`}
-              </p>
-            </FadeInSection>
-            <FadeInSection delay={220}>
-              <p className="font-[var(--font-body)] text-base leading-relaxed text-stone-200/95 md:text-lg whitespace-pre-line">
-                {`In stillness, she cultivated connection
-to the intelligent force “behind the veil”—
-guidance, healing, protection, and support.`}
-              </p>
-            </FadeInSection>
-            <FadeInSection delay={260}>
-              <p className="font-[var(--font-display)] text-xl leading-relaxed text-amber-50 md:text-2xl whitespace-pre-line [text-shadow:0_0_20px_rgba(126,58,237,0.35)]">
-                {`From mystic traditions, philosophy, science,
-and nature-based spirituality—
-one truth emerged:`}
-              </p>
-            </FadeInSection>
-            <FadeInSection delay={300}>
-              <p className="font-[var(--font-display)] text-xl font-semibold leading-relaxed text-stone-50 md:text-2xl whitespace-pre-line">
-                {`Spiritual growth is not one-size-fits-all.
-It is profoundly personal.`}
-              </p>
-            </FadeInSection>
-            <FadeInSection delay={340}>
-              <p className="font-[var(--font-body)] text-base leading-relaxed text-violet-100/95 md:text-lg whitespace-pre-line">
-                {`Learning styles, culture, temperament, symbolism—
-all of it matters.
-
-There is no universal ritual.
-Only personalized pathways.`}
-              </p>
-            </FadeInSection>
+            {aboutStoryParagraphs.map((text, i) => (
+              <FadeInSection key={i} delay={STORY_DELAYS_MS[i] ?? 60}>
+                <p className={STORY_P_CLASS[i] ?? STORY_P_CLASS[0]}>{text}</p>
+              </FadeInSection>
+            ))}
           </section>
 
           <CelestialDivider />
@@ -220,15 +188,14 @@ Only personalized pathways.`}
             <FadeInSection delay={120}>
               <div className="mb-10 flex flex-col items-center justify-center gap-3 md:mb-14 md:gap-4">
                 <div className="flex items-center gap-3 md:gap-4">
-                  <StarFlourish className="opacity-80" />
+                  <StarFlourish className="opacity-80 shrink-0" />
                   <h2
                     id="about-pillars-heading"
-                    className="font-[var(--font-display)] max-w-xl text-center text-xl font-semibold leading-snug tracking-tight text-amber-50 sm:text-2xl md:text-3xl [text-shadow:0_0_24px_rgba(126,58,237,0.35)]"
+                    className="font-[var(--font-display)] max-w-xl text-center text-xl font-semibold leading-snug tracking-tight text-amber-50 sm:text-2xl md:text-3xl [text-shadow:0_0_24px_rgba(126,58,237,0.35)] text-pretty"
                   >
-                    Three essential pillars to consciously connect with Source
-                    Energy
+                    {aboutPillarsHeading}
                   </h2>
-                  <StarFlourish className="opacity-80" />
+                  <StarFlourish className="opacity-80 shrink-0" />
                 </div>
               </div>
             </FadeInSection>
@@ -255,10 +222,8 @@ Only personalized pathways.`}
             </h2>
             <div className="pointer-events-none absolute inset-x-0 bottom-0 h-40 bg-gradient-to-b from-transparent to-[#03050f]/90" />
             <FadeInSection delay={200}>
-              <p className="relative mx-auto max-w-prose text-center font-[var(--font-body)] text-base leading-relaxed text-violet-100/95 md:text-lg whitespace-pre-line [text-shadow:0_1px_16px_rgba(0,0,0,0.35)]">
-                {`Through The Opaline Owl, Jenny shares her journey and teachings to help others create their own sacred practices — rooted in nature, awareness, and individualized spiritual design.
-
-Her work exists at the intersection of mystical and naturalistic, inviting seekers to evolve with clarity, reverence, and intention.`}
+              <p className="relative mx-auto w-full max-w-5xl lg:max-w-6xl text-center text-pretty font-[var(--font-body)] text-base leading-relaxed text-violet-100/95 md:text-lg whitespace-pre-line [text-shadow:0_1px_16px_rgba(0,0,0,0.35)]">
+                {aboutClosing}
               </p>
             </FadeInSection>
           </section>

@@ -188,7 +188,7 @@ export default function CoursesPage() {
                 </form>
               </div>
               <p className="mt-6 text-sm text-[var(--text-muted)]">
-                Join the Parliament!
+                Join the Journey!
               </p>
             </div>
           </FadeInSection>
