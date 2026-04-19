@@ -1,23 +1,36 @@
 "use client";
 
 import Image from "next/image";
+import { motion, useScroll, useTransform } from "framer-motion";
+import type { RefObject } from "react";
 
 const IMAGE_SRC = "/images/mysticalforest.png";
 
-export function HeroBackgroundImage() {
+export function HeroBackgroundImage({
+  scrollTargetRef,
+}: {
+  scrollTargetRef: RefObject<HTMLElement | null>;
+}) {
+  const { scrollYProgress } = useScroll({
+    target: scrollTargetRef,
+    offset: ["start start", "end start"],
+  });
+
+  const y = useTransform(scrollYProgress, [0, 1], ["0%", "22%"]);
+
   return (
-    <div className="absolute inset-0">
-      {/* Background image — fades in on load */}
-      <div className="absolute inset-0 animate-hero-bg">
+    <div className="absolute inset-0 overflow-hidden">
+      {/* Background image — fades in on load + parallax on scroll */}
+      <motion.div className="absolute inset-0 animate-hero-bg" style={{ y }}>
         <Image
           src={IMAGE_SRC}
           alt=""
           fill
-          className="object-cover object-center"
+          className="object-cover object-center scale-[1.12]"
           priority
           sizes="100vw"
         />
-      </div>
+      </motion.div>
       {/* Cinematic gradient: left 55% → center ~10%, soft and natural */}
       <div
         className="absolute inset-0 animate-hero-bg"

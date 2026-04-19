@@ -1,6 +1,5 @@
-import { client } from "@/lib/sanity/client";
-import { featuredReviewsQuery } from "@/lib/sanity/queries";
 import type { ReviewListItem } from "@/lib/sanity/types";
+import { staticReviewsAsFeaturedItems } from "@/lib/book-reviews/static-reviews";
 import { FadeInSection } from "@/components/ui/FadeInSection";
 import { Hero } from "@/components/blocks/Hero";
 import { QuoteSection } from "@/components/blocks/QuoteSection";
@@ -8,14 +7,26 @@ import { ThreeStepsSection } from "@/components/blocks/ThreeStepsSection";
 import { BenefitsSection } from "@/components/blocks/BenefitsSection";
 import { MeetAndWelcomeSection } from "@/components/blocks/MeetAndWelcomeSection";
 import { CTASection } from "@/components/blocks/CTASection";
+import { FloatingParticles } from "@/components/ui/FloatingParticles";
 
 export default async function HomePage() {
-  let reviews: ReviewListItem[] = [];
-  try {
-    reviews = await client.fetch(featuredReviewsQuery);
-  } catch {
-    // No Sanity env
-  }
+  const { fetchFeaturedReviews } = await import(
+    "@/lib/sanity/fetch-featured-reviews"
+  );
+  let reviews: ReviewListItem[] = await fetchFeaturedReviews();
+
+  const staticFeatured = staticReviewsAsFeaturedItems();
+  const sanitySlugs = new Set(reviews.map((r) => r.slug));
+  const mergedFeatured = [
+    ...staticFeatured.filter((r) => !sanitySlugs.has(r.slug)),
+    ...reviews,
+  ]
+    .sort(
+      (a, b) =>
+        new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime()
+    )
+    .slice(0, 3);
+  reviews = mergedFeatured;
 
   return (
     <>
@@ -23,6 +34,7 @@ export default async function HomePage() {
         <Hero />
       </FadeInSection>
       <div className="home-dark">
+        <FloatingParticles />
         <FadeInSection delay={100}>
           <MeetAndWelcomeSection reviews={reviews} />
         </FadeInSection>
