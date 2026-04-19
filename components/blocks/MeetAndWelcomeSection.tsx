@@ -12,7 +12,7 @@ import type { ReviewListItem } from "@/lib/sanity/types";
 
 const welcomeBodyCopy = `Here, spirituality is both mystical and grounded: rooted in balance, awareness, and practices that meet you where you are.`;
 
-const MotionLink = motion(Link);
+const MotionLink = motion.create(Link);
 
 const springIntro = {
   initial: { opacity: 0, y: 18 },

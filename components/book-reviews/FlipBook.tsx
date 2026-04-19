@@ -1,0 +1,528 @@
+"use client";
+
+import dynamic from "next/dynamic";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  useSyncExternalStore,
+  type CSSProperties,
+  type ReactNode,
+} from "react";
+import { PortableText } from "@/components/blocks/PortableText";
+import type { FlipBookPage } from "@/lib/book-reviews/paginate";
+
+const HTMLFlipBook = dynamic(
+  () => import("react-pageflip").then((mod) => mod.default),
+  {
+    ssr: false,
+    loading: () => (
+      <div
+        className="flipbook-wrapper flipbook-wrapper--skeleton"
+        aria-busy="true"
+      >
+        <div className="flipbook-skeleton-inner rounded-lg border border-stone-400/40 bg-[#f2e7cf]/90 min-h-[min(70vh,38rem)] w-full max-w-4xl mx-auto animate-pulse" />
+      </div>
+    ),
+  },
+);
+
+export type FlipBookProps = {
+  header: ReactNode;
+  pages: FlipBookPage[];
+};
+
+/** Page-flip hides non-active spreads with `display: none` on `.stf__item`. */
+function getVisiblePageInners(block: Element | null | undefined): HTMLElement[] {
+  if (!block) return [];
+  const out: HTMLElement[] = [];
+  block.querySelectorAll(".flipbook-page-inner").forEach((node) => {
+    const el = node as HTMLElement;
+    const item = el.closest(".stf__item");
+    if (!item) return;
+    const cs = getComputedStyle(item);
+    if (cs.display === "none" || cs.visibility === "hidden") return;
+    const r = (item as HTMLElement).getBoundingClientRect();
+    if (r.width < 2 || r.height < 2) return;
+    out.push(el);
+  });
+  return out;
+}
+
+/** Native `input[type=range]` vertical mode is unreliable; custom pointer slider. */
+function FlipGutter({
+  maxScroll,
+  scrollTop,
+  onChange,
+}: {
+  maxScroll: number;
+  scrollTop: number;
+  onChange: (v: number) => void;
+}) {
+  const trackRef = useRef<HTMLDivElement | null>(null);
+  const dragging = useRef(false);
+  const scrollTopRef = useRef(scrollTop);
+  const onChangeRef = useRef(onChange);
+  useEffect(() => {
+    scrollTopRef.current = scrollTop;
+    onChangeRef.current = onChange;
+  }, [scrollTop, onChange]);
+
+  useEffect(() => {
+    const el = trackRef.current;
+    if (!el) return;
+    const onWheel = (e: WheelEvent) => {
+      if (maxScroll <= 0) return;
+      e.preventDefault();
+      e.stopPropagation();
+      const cur = scrollTopRef.current;
+      const next = Math.min(
+        maxScroll,
+        Math.max(0, cur + e.deltaY),
+      );
+      onChangeRef.current(next);
+    };
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => el.removeEventListener("wheel", onWheel);
+  }, [maxScroll]);
+
+  const pct =
+    maxScroll > 0
+      ? Math.max(0, Math.min(1, scrollTop / maxScroll))
+      : 0;
+
+  const yToScroll = (clientY: number) => {
+    const track = trackRef.current;
+    if (!track || maxScroll <= 0) return;
+    const rect = track.getBoundingClientRect();
+    const y = Math.min(Math.max(clientY, rect.top), rect.bottom);
+    const ratio = (y - rect.top) / Math.max(rect.height, 1);
+    onChange(Math.round(ratio * maxScroll));
+  };
+
+  return (
+    <div
+      ref={trackRef}
+      role="slider"
+      tabIndex={0}
+      aria-label="Scroll both pages of the open spread"
+      className="flipbook-gutter-track"
+      style={
+        { "--flipbook-gutter-pct": `${pct * 100}%` } as CSSProperties
+      }
+      aria-valuemin={0}
+      aria-valuemax={maxScroll}
+      aria-valuenow={scrollTop}
+      aria-orientation="vertical"
+      onKeyDown={(e) => {
+        if (maxScroll <= 0) return;
+        const step = Math.max(1, Math.round(maxScroll / 20));
+        if (e.key === "ArrowDown" || e.key === "PageDown") {
+          e.preventDefault();
+          onChange(Math.min(maxScroll, scrollTop + step));
+        } else if (e.key === "ArrowUp" || e.key === "PageUp") {
+          e.preventDefault();
+          onChange(Math.max(0, scrollTop - step));
+        } else if (e.key === "Home") {
+          e.preventDefault();
+          onChange(0);
+        } else if (e.key === "End") {
+          e.preventDefault();
+          onChange(maxScroll);
+        }
+      }}
+      onPointerDown={(e) => {
+        if (maxScroll <= 0) return;
+        e.preventDefault();
+        e.stopPropagation();
+        dragging.current = true;
+        (e.currentTarget as HTMLElement).setPointerCapture(e.pointerId);
+        yToScroll(e.clientY);
+      }}
+      onPointerMove={(e) => {
+        if (!dragging.current) return;
+        e.preventDefault();
+        yToScroll(e.clientY);
+      }}
+      onPointerUp={(e) => {
+        if (!dragging.current) return;
+        dragging.current = false;
+        try {
+          (e.currentTarget as HTMLElement).releasePointerCapture(e.pointerId);
+        } catch {
+          /* already released */
+        }
+      }}
+      onPointerCancel={(e) => {
+        dragging.current = false;
+        try {
+          (e.currentTarget as HTMLElement).releasePointerCapture(e.pointerId);
+        } catch {
+          /* ignore */
+        }
+      }}
+    >
+      <div className="flipbook-gutter-thumb" aria-hidden />
+    </div>
+  );
+}
+
+function useMediaQuery(query: string): boolean {
+  return useSyncExternalStore(
+    (onChange) => {
+      if (typeof window === "undefined") return () => {};
+      const mq = window.matchMedia(query);
+      mq.addEventListener("change", onChange);
+      return () => mq.removeEventListener("change", onChange);
+    },
+    () => window.matchMedia(query).matches,
+    () => false,
+  );
+}
+
+type PageFlipApi = {
+  getCurrentPageIndex: () => number;
+  getPageCount: () => number;
+  flipNext: (corner?: "top" | "bottom") => void;
+  flipPrev: (corner?: "top" | "bottom") => void;
+  turnToNextPage: () => void;
+  turnToPrevPage: () => void;
+};
+
+type FlipBookHandle = {
+  pageFlip: () => PageFlipApi | undefined;
+};
+
+function syncFromRef(
+  ref: React.RefObject<FlipBookHandle | null>,
+  setPageIdx: (n: number) => void,
+  setPageCount: (n: number) => void,
+) {
+  const api = ref.current?.pageFlip?.();
+  if (!api) return;
+  setPageIdx(api.getCurrentPageIndex());
+  setPageCount(api.getPageCount());
+}
+
+export function FlipBook({ header, pages }: FlipBookProps) {
+  const wrapperRef = useRef<HTMLDivElement | null>(null);
+  const bookRef = useRef<FlipBookHandle | null>(null);
+  const scrollLock = useRef(false);
+  const isMobile = useMediaQuery("(max-width: 767px)");
+  const reduceMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
+  const [pageIdx, setPageIdx] = useState(0);
+  const [pageCount, setPageCount] = useState(0);
+  const [gutterMax, setGutterMax] = useState(0);
+  const [gutterValue, setGutterValue] = useState(0);
+  const [bookBox, setBookBox] = useState({ top: 0, height: 0 });
+
+  const flippingTime = reduceMotion ? 1 : 700;
+
+  const measureBookBox = useCallback(() => {
+    const wrap = wrapperRef.current;
+    const book = wrap?.querySelector(".stf__wrapper") as HTMLElement | null;
+    const frame = wrap?.querySelector(".flipbook-book-frame") as HTMLElement | null;
+    if (!wrap || !book || !frame) return;
+    const fr = frame.getBoundingClientRect();
+    const br = book.getBoundingClientRect();
+    const bookTop = br.top - fr.top;
+    const bookBottom = br.bottom - fr.top;
+    const top = Math.max(0, bookTop);
+    const bottom = Math.min(fr.height, bookBottom);
+    const height = Math.max(0, bottom - top);
+    setBookBox({ top, height });
+  }, []);
+
+  const measureGutter = useCallback(() => {
+    const block = wrapperRef.current?.querySelector(".stf__block");
+    const inners = getVisiblePageInners(block);
+    let max = 0;
+    for (const el of inners) {
+      max = Math.max(max, el.scrollHeight - el.clientHeight);
+    }
+    setGutterMax(Math.max(0, Math.ceil(max)));
+  }, []);
+
+  const resetVisibleScroll = useCallback(() => {
+    scrollLock.current = true;
+    requestAnimationFrame(() => {
+      const block = wrapperRef.current?.querySelector(".stf__block");
+      block?.querySelectorAll(".flipbook-page-inner").forEach((node) => {
+        (node as HTMLElement).scrollTop = 0;
+      });
+      setGutterValue(0);
+      requestAnimationFrame(() => {
+        measureGutter();
+        scrollLock.current = false;
+      });
+    });
+  }, [measureGutter]);
+
+  const goNext = useCallback(() => {
+    const api = bookRef.current?.pageFlip?.();
+    if (!api) return;
+    if (reduceMotion) api.turnToNextPage();
+    else api.flipNext("top");
+    queueMicrotask(() => syncFromRef(bookRef, setPageIdx, setPageCount));
+  }, [reduceMotion]);
+
+  const goPrev = useCallback(() => {
+    const api = bookRef.current?.pageFlip?.();
+    if (!api) return;
+    if (reduceMotion) api.turnToPrevPage();
+    else api.flipPrev("top");
+    queueMicrotask(() => syncFromRef(bookRef, setPageIdx, setPageCount));
+  }, [reduceMotion]);
+
+  useEffect(() => {
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "ArrowRight") {
+        e.preventDefault();
+        goNext();
+      } else if (e.key === "ArrowLeft") {
+        e.preventDefault();
+        goPrev();
+      }
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [goNext, goPrev]);
+
+  useEffect(() => {
+    const el = wrapperRef.current;
+    if (!el) return;
+    const ro = new ResizeObserver(() => {
+      measureGutter();
+      measureBookBox();
+    });
+    ro.observe(el);
+    const book = el.querySelector(".stf__wrapper");
+    if (book) ro.observe(book);
+    window.addEventListener("resize", measureBookBox);
+    return () => {
+      ro.disconnect();
+      window.removeEventListener("resize", measureBookBox);
+    };
+  }, [measureGutter, measureBookBox, pages.length, isMobile, pageIdx]);
+
+  /** Trackpad/wheel: scroll the visible spread directly. Bypasses StPageFlip's stacked layers. */
+  useEffect(() => {
+    const el = wrapperRef.current?.querySelector(
+      ".flipbook-book-frame",
+    ) as HTMLElement | null;
+    if (!el) return;
+    const onWheel = (e: WheelEvent) => {
+      const block = wrapperRef.current?.querySelector(".stf__block");
+      const inners = getVisiblePageInners(block);
+      if (inners.length === 0) return;
+      const max = Math.max(
+        0,
+        ...inners.map((i) => i.scrollHeight - i.clientHeight),
+      );
+      if (max <= 0) return;
+      e.preventDefault();
+      const cur = inners[0].scrollTop;
+      const next = Math.min(max, Math.max(0, cur + e.deltaY));
+      scrollLock.current = true;
+      for (const inner of inners) {
+        const m = Math.max(0, inner.scrollHeight - inner.clientHeight);
+        inner.scrollTop = Math.min(next, m);
+      }
+      setGutterValue(next);
+      requestAnimationFrame(() => {
+        scrollLock.current = false;
+      });
+    };
+    el.addEventListener("wheel", onWheel, { passive: false });
+    return () => el.removeEventListener("wheel", onWheel as EventListener);
+  }, [pages.length, isMobile, pageIdx]);
+
+  const onFlip = useCallback(
+    (e: { data?: unknown }) => {
+      const d = e?.data;
+      if (typeof d === "number") setPageIdx(d);
+      else syncFromRef(bookRef, setPageIdx, setPageCount);
+      resetVisibleScroll();
+    },
+    [resetVisibleScroll],
+  );
+
+  const onInit = useCallback(
+    (e: { data?: { page?: number } }) => {
+      const p = e?.data?.page;
+      if (typeof p === "number") setPageIdx(p);
+      requestAnimationFrame(() => {
+        syncFromRef(bookRef, setPageIdx, setPageCount);
+        resetVisibleScroll();
+      });
+    },
+    [resetVisibleScroll],
+  );
+
+  const handleInnerScroll = useCallback(
+    (e: React.UIEvent<HTMLDivElement>) => {
+      if (scrollLock.current) return;
+      const source = e.currentTarget;
+      scrollLock.current = true;
+      const v = source.scrollTop;
+      const block = source.closest(".stf__block");
+      const inners = getVisiblePageInners(block);
+      for (const el of inners) {
+        if (el === source) continue;
+        const max = Math.max(0, el.scrollHeight - el.clientHeight);
+        el.scrollTop = Math.min(v, max);
+      }
+      setGutterValue(v);
+      requestAnimationFrame(() => {
+        scrollLock.current = false;
+      });
+    },
+    [],
+  );
+
+  const onGutterScrollChange = useCallback((v: number) => {
+    scrollLock.current = true;
+    const block = wrapperRef.current?.querySelector(".stf__block");
+    const inners = getVisiblePageInners(block);
+    let display = 0;
+    for (const el of inners) {
+      const max = Math.max(0, el.scrollHeight - el.clientHeight);
+      el.scrollTop = Math.min(Math.max(0, v), max);
+      display = Math.max(display, el.scrollTop);
+    }
+    setGutterValue(display);
+    requestAnimationFrame(() => {
+      scrollLock.current = false;
+    });
+  }, []);
+
+  const canPrev = pageIdx > 0;
+  const canNext = pageCount > 0 && pageIdx < pageCount - 1;
+
+  const showGutter = !isMobile && gutterMax > 0;
+  const gutterSliderValue = Math.min(gutterValue, gutterMax);
+
+  const flipProps = {
+    startPage: 0,
+    size: "stretch" as const,
+    width: 380,
+    height: 535,
+    minWidth: 220,
+    maxWidth: 480,
+    minHeight: 320,
+    maxHeight: 670,
+    drawShadow: true,
+    flippingTime,
+    usePortrait: isMobile,
+    startZIndex: 0,
+    autoSize: true,
+    maxShadowOpacity: 0.45,
+    showCover: false,
+    mobileScrollSupport: true,
+    clickEventForward: true,
+    useMouseEvents: true,
+    swipeDistance: 30,
+    showPageCorners: !reduceMotion,
+    /** Avoids page-turn on mouseup after using a scrollbar (native or trackpad). */
+    disableFlipByClick: true,
+    onFlip,
+    onInit,
+  };
+
+  return (
+    <div
+      ref={wrapperRef}
+      className="flipbook-wrapper mx-auto w-full max-w-5xl"
+    >
+      {/* Frame height = book only so the gutter does not extend over Prev/Next. */}
+      <div className="flipbook-book-frame relative w-full">
+        {showGutter && bookBox.height > 0 ? (
+          <div
+            className="pointer-events-none absolute left-0 right-0 z-[40]"
+            style={{
+              top: `${bookBox.top}px`,
+              height: `${bookBox.height}px`,
+            }}
+            aria-hidden={false}
+          >
+            {/* Short center strip (~¼ book height) so it stays on the spine, not full bleed. */}
+            <div className="pointer-events-auto absolute left-1/2 top-[37.5%] z-[40] flex h-1/4 w-3 -translate-x-1/2 items-stretch justify-center">
+              <FlipGutter
+                maxScroll={gutterMax}
+                scrollTop={gutterSliderValue}
+                onChange={onGutterScrollChange}
+              />
+            </div>
+          </div>
+        ) : null}
+
+        <HTMLFlipBook
+          key={isMobile ? "portrait" : "landscape"}
+          ref={bookRef}
+          className="flipbook-stf relative z-[1]"
+          style={{ width: "100%" }}
+          {...flipProps}
+        >
+        <div key="flip-header" className="flipbook-page" data-density="soft">
+          <div
+            className="flipbook-page-inner"
+            onScroll={handleInnerScroll}
+          >
+            {header}
+          </div>
+        </div>
+        {pages.map((p, i) => (
+          <div
+            key={`flip-${i}`}
+            className="flipbook-page"
+            data-density="soft"
+          >
+            <div
+              className="flipbook-page-inner"
+              onScroll={handleInnerScroll}
+            >
+              {p.kind === "text" ? (
+                <p className="flipbook-page-text whitespace-pre-wrap text-base leading-relaxed text-[#1a140c] sm:text-lg">
+                  {p.text}
+                </p>
+              ) : p.blocks.length > 0 ? (
+                <div className="flipbook-prose max-w-none text-left text-[#1a140c]">
+                  <PortableText value={p.blocks} tone="onParchment" />
+                </div>
+              ) : null}
+            </div>
+          </div>
+        ))}
+        </HTMLFlipBook>
+      </div>
+
+      <div className="mt-6 flex flex-col items-center gap-3 sm:flex-row sm:justify-center sm:gap-6">
+        <button
+          type="button"
+          onClick={goPrev}
+          disabled={!canPrev}
+          className="inline-flex min-w-[7rem] items-center justify-center rounded-lg border border-stone-600/35 bg-stone-900/80 px-4 py-2 text-sm font-medium text-amber-100/95 shadow-sm transition enabled:hover:bg-stone-800 enabled:focus-visible:outline enabled:focus-visible:ring-2 enabled:focus-visible:ring-amber-400/50 disabled:cursor-not-allowed disabled:opacity-40"
+          aria-label="Previous page"
+        >
+          Previous
+        </button>
+        <p
+          className="text-sm tabular-nums text-[var(--text-muted)]"
+          aria-live="polite"
+        >
+          Page {pageCount > 0 ? pageIdx + 1 : 0} of {pageCount}
+        </p>
+        <button
+          type="button"
+          onClick={goNext}
+          disabled={!canNext}
+          className="inline-flex min-w-[7rem] items-center justify-center rounded-lg border border-stone-600/35 bg-stone-900/80 px-4 py-2 text-sm font-medium text-amber-100/95 shadow-sm transition enabled:hover:bg-stone-800 enabled:focus-visible:outline enabled:focus-visible:ring-2 enabled:focus-visible:ring-amber-400/50 disabled:cursor-not-allowed disabled:opacity-40"
+          aria-label="Next page"
+        >
+          Next
+        </button>
+      </div>
+    </div>
+  );
+}

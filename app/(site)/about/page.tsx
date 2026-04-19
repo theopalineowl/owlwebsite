@@ -25,6 +25,7 @@ const pillars: TarotPillar[] = [
     description:
       "Grounding awareness so intuition and clarity can emerge in daily life.",
     iconSrc: MOON_SVG,
+    photoSrc: "/images/3.png",
   },
   {
     index: 1,
@@ -32,6 +33,7 @@ const pillars: TarotPillar[] = [
     description:
       "Designing practices that fit your values, culture, and spiritual lens.",
     iconSrc: "/images/037-candles.svg",
+    photoSrc: "/images/1.png",
   },
   {
     index: 2,
@@ -39,6 +41,7 @@ const pillars: TarotPillar[] = [
     description:
       "Noticing meaningful patterns as you deepen your connection to Source.",
     iconSrc: "/images/Third%20Eye%20copy.svg",
+    photoSrc: "/images/2.png",
   },
 ];
 
@@ -200,9 +203,13 @@ export default function AboutPage() {
               </div>
             </FadeInSection>
 
-            <div className="grid grid-cols-1 gap-8 md:grid-cols-3 md:gap-6 lg:gap-8">
+            <div className="grid grid-cols-1 items-stretch gap-8 md:grid-cols-3 md:gap-6 lg:gap-8">
               {pillars.map((pillar, i) => (
-                <FadeInSection key={pillar.title} delay={160 + i * 70}>
+                <FadeInSection
+                  key={pillar.title}
+                  delay={160 + i * 70}
+                  className="h-full min-h-0"
+                >
                   <TarotPillarCard {...pillar} />
                 </FadeInSection>
               ))}
