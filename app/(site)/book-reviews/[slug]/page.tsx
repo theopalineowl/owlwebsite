@@ -11,30 +11,10 @@ import {
   STATIC_BOOK_REVIEWS,
   getStaticReviewBySlug,
 } from "@/lib/book-reviews/static-reviews";
+import { CommentsSection } from "@/components/comments/CommentsSection";
 
 export function generateStaticParams() {
   return STATIC_BOOK_REVIEWS.map((r) => ({ slug: r.slug }));
-}
-
-function CommentPlaceholder() {
-  return (
-    <div className="border-t border-white/10 pt-8 mt-10 md:mt-12">
-      <h3 className="font-[var(--font-display)] text-lg font-semibold text-[var(--text-primary)] mb-3">
-        Leave a comment
-      </h3>
-      <div className="rounded-2xl border border-white/15 bg-white/[0.04] backdrop-blur-md p-6">
-        <textarea
-          placeholder="Your comment..."
-          rows={4}
-          disabled
-          className="w-full rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-[var(--text-primary)] placeholder:text-[var(--text-muted)]/70 outline-none focus-visible:ring-2 focus-visible:ring-[rgba(126,58,237,0.55)] resize-none"
-        />
-        <p className="mt-3 text-sm text-[var(--text-muted)]">
-          Comments coming soon.
-        </p>
-      </div>
-    </div>
-  );
 }
 
 export default async function BookReviewDetailPage({
@@ -100,7 +80,7 @@ export default async function BookReviewDetailPage({
                 pages={pages}
               />
 
-              <CommentPlaceholder />
+              <CommentsSection targetType="bookReview" slug={slug} />
             </article>
           </FadeInSection>
         </div>
@@ -178,7 +158,7 @@ export default async function BookReviewDetailPage({
               pages={pages}
             />
 
-            <CommentPlaceholder />
+            <CommentsSection targetType="bookReview" slug={slug} />
           </article>
         </FadeInSection>
       </div>
