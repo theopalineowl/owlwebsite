@@ -1,8 +1,9 @@
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import { FlipBook } from "@/components/book-reviews/FlipBook";
 import { formatDate } from "@/lib/sanity/format";
-import { PortableText } from "@/components/blocks/PortableText";
+import { paginateReviewContent } from "@/lib/book-reviews/paginate";
 import { Section } from "@/components/layout/Section";
 import { FadeInSection } from "@/components/ui/FadeInSection";
 import { SectionTwinkles } from "@/components/ui/SectionTwinkles";
@@ -10,41 +11,10 @@ import {
   STATIC_BOOK_REVIEWS,
   getStaticReviewBySlug,
 } from "@/lib/book-reviews/static-reviews";
+import { CommentsSection } from "@/components/comments/CommentsSection";
 
 export function generateStaticParams() {
   return STATIC_BOOK_REVIEWS.map((r) => ({ slug: r.slug }));
-}
-
-/** 9-slice scroll background; inner width keeps copy inside torn paper edges. */
-function ReviewScrollBody({ children }: { children: React.ReactNode }) {
-  return (
-    <div className="review-scroll-sheet">
-      <div className="relative z-[1] mx-auto w-[86%] min-w-0 text-black">
-        {children}
-      </div>
-    </div>
-  );
-}
-
-function CommentPlaceholder() {
-  return (
-    <div className="border-t border-white/10 pt-8 mt-10 md:mt-12">
-      <h3 className="font-[var(--font-display)] text-lg font-semibold text-[var(--text-primary)] mb-3">
-        Leave a comment
-      </h3>
-      <div className="rounded-2xl border border-white/15 bg-white/[0.04] backdrop-blur-md p-6">
-        <textarea
-          placeholder="Your comment..."
-          rows={4}
-          disabled
-          className="w-full rounded-xl border border-white/20 bg-white/10 px-4 py-3 text-[var(--text-primary)] placeholder:text-[var(--text-muted)]/70 outline-none focus-visible:ring-2 focus-visible:ring-[rgba(126,58,237,0.55)] resize-none"
-        />
-        <p className="mt-3 text-sm text-[var(--text-muted)]">
-          Comments coming soon.
-        </p>
-      </div>
-    </div>
-  );
 }
 
 export default async function BookReviewDetailPage({
@@ -56,6 +26,7 @@ export default async function BookReviewDetailPage({
 
   const staticReview = getStaticReviewBySlug(slug);
   if (staticReview) {
+    const pages = paginateReviewContent(staticReview.bodyPlaceholder);
     return (
       <Section className="relative">
         <SectionTwinkles />
@@ -83,26 +54,33 @@ export default async function BookReviewDetailPage({
           </FadeInSection>
 
           <FadeInSection delay={100}>
-            <article className="max-w-3xl mx-auto">
-              <ReviewScrollBody>
-                <h1 className="font-[var(--font-display)] text-2xl sm:text-3xl md:text-4xl font-semibold text-black mb-3 text-pretty leading-tight text-center">
-                  {staticReview.title}
-                </h1>
-                {staticReview.bookAuthor && (
-                  <p className="text-black/85 text-center text-sm mb-1">
-                    Book by {staticReview.bookAuthor}
-                  </p>
-                )}
-                <p className="text-black/75 text-center text-xs sm:text-sm mb-8">
-                  {formatDate(staticReview.publishedAt)} · {staticReview.rating}
-                  /5
-                </p>
-                <p className="text-black leading-relaxed whitespace-pre-wrap text-base sm:text-lg text-left">
-                  {staticReview.bodyPlaceholder}
-                </p>
-              </ReviewScrollBody>
+            <article className="max-w-5xl mx-auto w-full">
+              <FlipBook
+                header={
+                  <>
+                    <h1 className="font-[var(--font-display)] text-2xl sm:text-3xl md:text-4xl font-semibold text-[#1a140c] mb-3 text-pretty leading-tight text-center">
+                      {staticReview.title}
+                    </h1>
+                    {staticReview.bookAuthor && (
+                      <p className="text-[#1a140c]/85 text-center text-sm mb-1">
+                        Book by {staticReview.bookAuthor}
+                      </p>
+                    )}
+                    <p className="text-[#1a140c]/75 text-center text-xs sm:text-sm mb-6">
+                      {formatDate(staticReview.publishedAt)} ·{" "}
+                      {staticReview.rating}/5
+                    </p>
+                    <p className="text-center text-xs text-[#1a140c]/60">
+                      Turn pages with the corner curls or the buttons below.
+                      On desktop, scroll inside the pages or use the center
+                      slider when the spread overflows.
+                    </p>
+                  </>
+                }
+                pages={pages}
+              />
 
-              <CommentPlaceholder />
+              <CommentsSection targetType="bookReview" slug={slug} />
             </article>
           </FadeInSection>
         </div>
@@ -119,6 +97,10 @@ export default async function BookReviewDetailPage({
   const hasBody =
     review.body && Array.isArray(review.body) && review.body.length > 0;
 
+  const pages = hasBody
+    ? paginateReviewContent(review.body)
+    : [{ kind: "text" as const, text: "No content yet." }];
+
   return (
     <Section className="relative">
       <SectionTwinkles />
@@ -133,7 +115,7 @@ export default async function BookReviewDetailPage({
         </FadeInSection>
 
         <FadeInSection delay={80}>
-          <article className="max-w-3xl mx-auto">
+          <article className="max-w-5xl mx-auto w-full">
             {review.bookCover ? (
               <div className="relative w-40 h-60 mx-auto mb-10 rounded-xl overflow-hidden border border-white/10 shadow-[0_0_40px_rgba(126,58,237,0.12)]">
                 <Image
@@ -147,33 +129,36 @@ export default async function BookReviewDetailPage({
               </div>
             ) : null}
 
-            <ReviewScrollBody>
-              <h1 className="font-[var(--font-display)] text-2xl sm:text-3xl md:text-4xl font-semibold text-black mb-2 text-pretty leading-tight text-center">
-                {review.title}
-              </h1>
-              {review.bookAuthor && (
-                <p className="text-black/85 text-center text-sm mb-2">
-                  by {review.bookAuthor}
-                </p>
-              )}
-              <p className="text-black/75 text-center text-xs sm:text-sm mb-4">
-                {formatDate(review.publishedAt)} · {review.rating}/5
-              </p>
-              {review.excerpt && (
-                <p className="text-black/80 leading-relaxed italic text-sm mb-6 text-center">
-                  {review.excerpt}
-                </p>
-              )}
-              {hasBody && review.body ? (
-                <div className="prose prose-lg max-w-none text-left">
-                  <PortableText value={review.body} tone="onParchment" />
-                </div>
-              ) : (
-                <p className="text-black/80 text-sm">No content yet.</p>
-              )}
-            </ReviewScrollBody>
+            <FlipBook
+              header={
+                <>
+                  <h1 className="font-[var(--font-display)] text-2xl sm:text-3xl md:text-4xl font-semibold text-[#1a140c] mb-2 text-pretty leading-tight text-center">
+                    {review.title}
+                  </h1>
+                  {review.bookAuthor && (
+                    <p className="text-[#1a140c]/85 text-center text-sm mb-2">
+                      by {review.bookAuthor}
+                    </p>
+                  )}
+                  <p className="text-[#1a140c]/75 text-center text-xs sm:text-sm mb-4">
+                    {formatDate(review.publishedAt)} · {review.rating}/5
+                  </p>
+                  {review.excerpt && (
+                    <p className="text-[#1a140c]/80 leading-relaxed italic text-sm mb-6 text-center">
+                      {review.excerpt}
+                    </p>
+                  )}
+                  <p className="text-center text-xs text-[#1a140c]/60">
+                    Turn pages with the corner curls or the buttons below. On
+                    desktop, scroll inside the pages or use the center slider
+                    when the spread overflows.
+                  </p>
+                </>
+              }
+              pages={pages}
+            />
 
-            <CommentPlaceholder />
+            <CommentsSection targetType="bookReview" slug={slug} />
           </article>
         </FadeInSection>
       </div>

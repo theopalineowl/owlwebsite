@@ -10,6 +10,7 @@ import {
   STATIC_BLOG_POSTS,
   getStaticPostBySlug,
 } from "@/lib/blog/static-posts";
+import { CommentsSection } from "@/components/comments/CommentsSection";
 
 export function generateStaticParams() {
   return STATIC_BLOG_POSTS.map((p) => ({ slug: p.slug }));
@@ -69,6 +70,7 @@ export default async function BlogPostPage({
                   {staticPost.bodyPlaceholder}
                 </p>
               </div>
+              <CommentsSection targetType="blog" slug={slug} />
             </div>
           </FadeInSection>
         </div>
@@ -144,6 +146,7 @@ export default async function BlogPostPage({
             ) : (
               <p className="text-[var(--text-muted)]">No content yet.</p>
             )}
+            <CommentsSection targetType="blog" slug={slug} />
           </article>
         </FadeInSection>
       </div>
