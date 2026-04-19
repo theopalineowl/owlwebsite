@@ -1,11 +1,20 @@
+"use client";
+
+import { useRef } from "react";
 import Image from "next/image";
+import { motion } from "framer-motion";
 import { HeroBackgroundImage } from "./HeroBackgroundImage";
 import { HeroTwinkleOverlay } from "./HeroTwinkleOverlay";
 
 export function Hero() {
+  const sectionRef = useRef<HTMLElement>(null);
+
   return (
-    <section className="relative w-full h-screen min-h-[600px] max-h-[100dvh] overflow-hidden flex flex-col">
-      <HeroBackgroundImage />
+    <section
+      ref={sectionRef}
+      className="relative w-full h-screen min-h-[600px] max-h-[100dvh] overflow-hidden flex flex-col"
+    >
+      <HeroBackgroundImage scrollTargetRef={sectionRef} />
 
       {/* Content: headline + portrait row on md+ (portrait left); quote below */}
       <div className="relative z-10 flex-1 flex flex-col pl-4 pr-6 sm:pl-5 sm:pr-8 md:pl-6 md:pr-10 lg:pl-8 lg:pr-14 pt-[clamp(2rem,8vh,4rem)] pb-[clamp(1.5rem,6vh,3rem)]">
@@ -13,7 +22,7 @@ export function Hero() {
         <div className="flex-shrink-0 flex flex-col md:grid md:grid-cols-[auto_minmax(0,1fr)] md:items-center gap-6 md:gap-8 lg:gap-12 w-full mt-[clamp(4rem,14vh,8rem)] md:mt-[clamp(3rem,12vh,6rem)]">
           <div className="flex flex-col items-center md:items-start animate-hero-portrait order-2 md:order-1 md:justify-self-start md:pl-6 lg:pl-10">
             <div
-              className="relative w-[min(240px,42vw)] md:w-[min(260px,32vw)] lg:w-[min(300px,28vw)] aspect-[3/4] max-h-[min(42vh,320px)] md:max-h-[min(52vh,420px)] rounded-2xl overflow-hidden flex-shrink-0"
+              className="hero-portrait-float relative w-[min(240px,42vw)] md:w-[min(260px,32vw)] lg:w-[min(300px,28vw)] aspect-[3/4] max-h-[min(42vh,320px)] md:max-h-[min(52vh,420px)] rounded-2xl overflow-hidden flex-shrink-0"
               style={{
                 boxShadow:
                   "0 4px 24px rgba(0,0,0,0.2), 0 0 0 1px rgba(255,255,255,0.06)",
@@ -53,10 +62,7 @@ export function Hero() {
               >
                 Welcome to
               </p>
-              <p
-                className="magic-title font-semibold text-white leading-[1.05] uppercase mt-2 md:mt-3 text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl"
-                style={{ textShadow: "0 2px 24px rgba(0,0,0,0.35)" }}
-              >
+              <p className="magic-title magic-title-shimmer font-semibold leading-[1.05] uppercase mt-2 md:mt-3 text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl">
                 The Opaline Owl
               </p>
             </header>
@@ -65,14 +71,22 @@ export function Hero() {
 
         {/* Quote */}
         <div className="flex-1 flex items-center justify-center min-h-0 mt-6 md:mt-8 px-2">
-          <blockquote
-            className="animate-hero-quote text-center max-w-[380px] md:max-w-[420px]"
+          <motion.blockquote
+            className="text-center max-w-[380px] md:max-w-[420px]"
             style={{ textShadow: "0 2px 16px rgba(0,0,0,0.35)" }}
+            initial={{ opacity: 0, y: 14, filter: "blur(8px)" }}
+            animate={{ opacity: 1, y: 0, filter: "blur(0px)" }}
+            transition={{
+              duration: 0.9,
+              delay: 0.5,
+              ease: [0.22, 1, 0.36, 1],
+            }}
           >
             <p className="font-[var(--font-body)] text-base md:text-lg lg:text-xl text-white/95 italic leading-relaxed">
-              &ldquo;Guiding seekers in the development of intuitive rituals for connection to Source.&rdquo;
+              &ldquo;Guiding seekers in the development of intuitive rituals for
+              connection to Source.&rdquo;
             </p>
-          </blockquote>
+          </motion.blockquote>
         </div>
       </div>
 

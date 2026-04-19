@@ -1,4 +1,7 @@
+"use client";
+
 import Image from "next/image";
+import { motion } from "framer-motion";
 import { Section } from "@/components/layout/Section";
 import { DividerOrnament } from "@/components/ui/DividerOrnament";
 import { SectionTwinkles } from "@/components/ui/SectionTwinkles";
@@ -30,23 +33,59 @@ const steps = [
   },
 ];
 
+const container = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: { staggerChildren: 0.12, delayChildren: 0.06 },
+  },
+};
+
+const item = {
+  hidden: { opacity: 0, y: 28 },
+  show: {
+    opacity: 1,
+    y: 0,
+    transition: { type: "spring" as const, stiffness: 120, damping: 22 },
+  },
+};
+
 export function ThreeStepsSection() {
   return (
     <>
       <DividerOrnament />
-      <Section className="relative">
+      <Section tight className="relative overflow-visible">
         <SectionTwinkles />
-        <h2 className="font-[var(--font-display)] text-4xl md:text-6xl font-semibold text-[var(--text-primary)] text-center mb-16">
+        <motion.h2
+          className="font-[var(--font-display)] text-4xl md:text-6xl font-semibold text-[var(--text-primary)] text-center mb-8 md:mb-10"
+          initial={{ opacity: 0, y: 16 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "-80px" }}
+          transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
+        >
           Three Steps to Connect with Source Energy
-        </h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-14 max-w-6xl mx-auto">
+        </motion.h2>
+        <motion.div
+          className="grid grid-cols-1 md:grid-cols-3 gap-8 md:gap-6 lg:gap-8 max-w-6xl mx-auto"
+          variants={container}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true, margin: "-60px" }}
+        >
           {steps.map((step, i) => (
-            <div
+            <motion.div
               key={i}
-              className="relative text-center px-8 py-10 rounded-xl bg-white/60 shadow-[var(--shadow-soft)] border border-[var(--accent-gold-muted)]/20"
+              variants={item}
+              whileHover={{
+                scale: 1.02,
+                boxShadow:
+                  "0 0 0 1px rgba(196,181,253,0.35), 0 0 40px rgba(126,58,237,0.25), 0 24px 48px rgba(0,0,0,0.35)",
+              }}
+              transition={{ type: "spring", stiffness: 260, damping: 22 }}
+              className="group relative text-center px-6 py-8 md:px-7 md:py-9 rounded-xl backdrop-blur-md shadow-[var(--shadow-soft)] border border-white/10 step-card-shimmer-bg"
             >
               <span
-                className="absolute -top-4 left-1/2 -translate-x-1/2 w-12 h-12 rounded-full bg-[#4b5563] shadow-[var(--shadow-soft)] flex items-center justify-center p-1.5"
+                className="step-icon-levitate absolute -top-4 left-1/2 w-12 h-12 rounded-full bg-gradient-to-br from-violet-900/80 to-slate-800/90 shadow-[0_0_24px_rgba(126,58,237,0.35)] flex items-center justify-center p-1.5 ring-1 ring-white/15"
                 aria-hidden
               >
                 <Image
@@ -63,9 +102,9 @@ export function ThreeStepsSection() {
               <p className="text-[var(--text-muted)] text-base leading-relaxed italic">
                 {step.description}
               </p>
-            </div>
+            </motion.div>
           ))}
-        </div>
+        </motion.div>
       </Section>
     </>
   );

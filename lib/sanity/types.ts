@@ -51,5 +51,7 @@ export interface ReviewListItem {
   slug: string;
   publishedAt: string;
   bookCover?: { _ref: string; asset?: { url: string } };
+  /** When set (e.g. static reviews), use this path instead of Sanity `bookCover`. */
+  localCoverSrc?: string;
   rating: number;
 }

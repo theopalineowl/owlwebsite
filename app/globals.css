@@ -88,13 +88,325 @@ body {
   }
 }
 
-/* Home page: dark cool section (below hero) — white / light yellow text */
+/* Hero: title shimmer (gradient sweep across display text) */
+@keyframes magic-shimmer {
+  0% {
+    background-position: 200% center;
+  }
+  100% {
+    background-position: -200% center;
+  }
+}
+
+.magic-title-shimmer {
+  background-image: linear-gradient(
+    105deg,
+    #ffffff 0%,
+    #ffffff 35%,
+    #e9d5ff 42%,
+    #fef9c3 50%,
+    #e9d5ff 58%,
+    #ffffff 65%,
+    #ffffff 100%
+  );
+  background-size: 220% auto;
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+  /* Fallback: keep readable if clip unsupported */
+  -webkit-text-fill-color: transparent;
+  animation: magic-shimmer 7s linear infinite;
+  text-shadow: none;
+}
+
+@supports not ((-webkit-background-clip: text) or (background-clip: text)) {
+  .magic-title-shimmer {
+    color: #ffffff;
+    -webkit-text-fill-color: unset;
+    animation: none;
+    background: none;
+  }
+}
+
+/* Hero portrait: gentle levitation after load */
+@keyframes hero-portrait-levitate {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-6px);
+  }
+}
+
+.hero-portrait-float {
+  animation: hero-portrait-levitate 5.5s ease-in-out infinite;
+  animation-delay: 0.65s;
+}
+
+/* Nebula drift: home-dark atmospheric background */
+@keyframes nebula-drift {
+  0%,
+  100% {
+    opacity: 0.55;
+    transform: scale(1) translate(0, 0);
+  }
+  33% {
+    opacity: 0.72;
+    transform: scale(1.05) translate(2%, -1%);
+  }
+  66% {
+    opacity: 0.62;
+    transform: scale(1.02) translate(-2%, 1%);
+  }
+}
+
+/* Firefly particles in .home-dark */
+@keyframes firefly-float {
+  0%,
+  100% {
+    transform: translate(0, 0);
+  }
+  25% {
+    transform: translate(8px, -12px);
+  }
+  50% {
+    transform: translate(-6px, -20px);
+  }
+  75% {
+    transform: translate(-10px, -6px);
+  }
+}
+
+@keyframes firefly-opacity {
+  0%,
+  100% {
+    opacity: 0.25;
+  }
+  50% {
+    opacity: 0.85;
+  }
+}
+
+.home-firefly {
+  position: absolute;
+  border-radius: 9999px;
+  pointer-events: none;
+  box-shadow:
+    0 0 6px rgba(196, 181, 253, 0.9),
+    0 0 14px rgba(250, 204, 21, 0.35);
+  background: radial-gradient(
+    circle at 30% 30%,
+    rgba(254, 249, 195, 0.95),
+    rgba(167, 139, 250, 0.5) 45%,
+    transparent 70%
+  );
+  animation-name: firefly-float, firefly-opacity;
+  animation-timing-function: ease-in-out, ease-in-out;
+  animation-iteration-count: infinite, infinite;
+  will-change: transform, opacity;
+}
+
+/* Reusable soft glow pulse */
+@keyframes glow-pulse {
+  0%,
+  100% {
+    box-shadow:
+      0 0 20px rgba(126, 58, 237, 0.25),
+      0 0 48px rgba(126, 58, 237, 0.12),
+      0 0 80px rgba(250, 204, 21, 0.08);
+  }
+  50% {
+    box-shadow:
+      0 0 32px rgba(126, 58, 237, 0.42),
+      0 0 64px rgba(167, 139, 250, 0.18),
+      0 0 96px rgba(250, 204, 21, 0.12);
+  }
+}
+
+.cta-button-glow {
+  animation: glow-pulse 3.2s ease-in-out infinite;
+  border-radius: 9999px;
+}
+
+@keyframes meet-logo-aura-pulse {
+  0%,
+  100% {
+    opacity: 0.5;
+    transform: translate(-50%, -50%) scale(1);
+  }
+  50% {
+    opacity: 0.88;
+    transform: translate(-50%, -50%) scale(1.06);
+  }
+}
+
+.meet-logo-aura {
+  animation: meet-logo-aura-pulse 4.2s ease-in-out infinite;
+}
+
+/* Quote section: pulsing ethereal glow on text */
+@keyframes quote-text-glow {
+  0%,
+  100% {
+    text-shadow:
+      0 0 20px rgba(126, 58, 237, 0.25),
+      0 2px 24px rgba(0, 0, 0, 0.35);
+  }
+  50% {
+    text-shadow:
+      0 0 32px rgba(167, 139, 250, 0.45),
+      0 0 48px rgba(126, 58, 237, 0.2),
+      0 2px 24px rgba(0, 0, 0, 0.35);
+  }
+}
+
+.quote-ethereal-glow {
+  animation: quote-text-glow 4.5s ease-in-out infinite;
+}
+
+/* Divider: traveling shimmer on lines */
+@keyframes divider-shimmer {
+  0% {
+    background-position: 0% 50%;
+  }
+  100% {
+    background-position: 200% 50%;
+  }
+}
+
+.divider-line-shimmer {
+  height: 1px;
+  width: 100%;
+  min-width: 2rem;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(254, 249, 195, 0.15) 20%,
+    rgba(196, 181, 253, 0.55) 50%,
+    rgba(254, 249, 195, 0.15) 80%,
+    transparent
+  );
+  background-size: 200% 100%;
+  animation: divider-shimmer 4s linear infinite;
+}
+
+/* Three-steps: icon ring slow float */
+@keyframes step-icon-levitate {
+  0%,
+  100% {
+    transform: translate(-50%, 0);
+  }
+  50% {
+    transform: translate(-50%, -4px);
+  }
+}
+
+.step-icon-levitate {
+  animation: step-icon-levitate 5s ease-in-out infinite;
+}
+
+@keyframes step-card-bg-shimmer {
+  0%,
+  100% {
+    background-position: 0% 40%;
+  }
+  50% {
+    background-position: 100% 60%;
+  }
+}
+
+.step-card-shimmer-bg {
+  background-image: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.07) 0%,
+    rgba(139, 92, 246, 0.12) 45%,
+    rgba(254, 249, 195, 0.06) 100%
+  );
+  background-size: 220% 220%;
+  animation: step-card-bg-shimmer 14s ease-in-out infinite;
+}
+
+/* Benefits pill icon: subtle pulse */
+@keyframes benefits-icon-pulse {
+  0%,
+  100% {
+    transform: scale(1);
+    filter: brightness(1);
+  }
+  50% {
+    transform: scale(1.06);
+    filter: brightness(1.1);
+  }
+}
+
+.benefits-icon-pulse {
+  animation: benefits-icon-pulse 3.2s ease-in-out infinite;
+}
+
+/* Divider center twinkle glow */
+@keyframes divider-twinkle-glow {
+  0%,
+  100% {
+    filter: drop-shadow(0 0 6px rgba(196, 181, 253, 0.35));
+  }
+  50% {
+    filter: drop-shadow(0 0 14px rgba(250, 204, 21, 0.45))
+      drop-shadow(0 0 20px rgba(167, 139, 250, 0.35));
+  }
+}
+
+.divider-twinkle-wrap {
+  animation: divider-twinkle-glow 3.5s ease-in-out infinite;
+}
+
+/* Home page: dark cool section (below hero) — white / light yellow text + nebula */
 .home-dark {
-  background: #0f172a;
+  position: relative;
+  isolation: isolate;
+  background-color: #0b1220;
   --text-primary: #ffffff;
   --text-muted: #fef9c3;
   --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.2);
   --shadow-lift: 0 8px 30px rgba(0, 0, 0, 0.25);
+}
+
+.home-dark::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(
+      ellipse 120% 80% at 50% -30%,
+      rgba(91, 33, 182, 0.38),
+      transparent 55%
+    ),
+    radial-gradient(
+      ellipse 70% 50% at 100% 40%,
+      rgba(30, 27, 75, 0.45),
+      transparent 55%
+    ),
+    radial-gradient(
+      ellipse 80% 60% at 0% 80%,
+      rgba(15, 23, 42, 0.9),
+      transparent 50%
+    );
+  animation: nebula-drift 28s ease-in-out infinite;
+}
+
+.home-dark > *:not(.home-dark-particles) {
+  position: relative;
+  z-index: 1;
+}
+
+.home-dark-particles {
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  overflow: hidden;
 }
 
 .home-dark .rounded-xl,
@@ -131,6 +443,48 @@ body {
   }
   .journey-card {
     animation: none;
+  }
+  .magic-title-shimmer {
+    animation: none;
+    color: #ffffff;
+    -webkit-text-fill-color: #ffffff;
+    background: none;
+  }
+  .hero-portrait-float {
+    animation: none;
+  }
+  .home-dark::before {
+    animation: none;
+  }
+  .home-firefly {
+    animation: none;
+    opacity: 0.35;
+  }
+  .cta-button-glow {
+    animation: none;
+  }
+  .quote-ethereal-glow {
+    animation: none;
+  }
+  .divider-line-shimmer {
+    animation: none;
+  }
+  .divider-twinkle-wrap {
+    animation: none;
+  }
+  .step-icon-levitate {
+    animation: none;
+  }
+  .benefits-icon-pulse {
+    animation: none;
+  }
+  .step-card-shimmer-bg {
+    animation: none;
+    background-size: 100% 100%;
+  }
+  .meet-logo-aura {
+    animation: none;
+    opacity: 0.65;
   }
 }
 
@@ -224,4 +578,34 @@ body {
   .about-tarot-card {
     animation: none;
   }
+}
+
+/* Book review detail: 9-slice parchment (top roll + tile middle + bottom roll) */
+.review-scroll-sheet {
+  position: relative;
+  isolation: isolate;
+  width: 100%;
+  max-width: min(44rem, 96vw);
+  margin-left: auto;
+  margin-right: auto;
+  /* Clear top/bottom rolls when bg is scaled to full width (~906/3927 * width each) */
+  padding: clamp(6.5rem, 12vw, 10.5rem) clamp(2.5rem, 7vw, 4rem)
+    clamp(6.5rem, 13vw, 10.5rem);
+}
+
+.review-scroll-sheet::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  /* First image = topmost layer */
+  background-image:
+    url("/images/scroll-top.png"),
+    url("/images/scroll-bottom.png"),
+    url("/images/scroll-middle.png");
+  background-repeat: no-repeat, no-repeat, repeat-y;
+  background-position: top center, bottom center, center top;
+  background-size: 100% auto, 100% auto, 100% auto;
+  filter: drop-shadow(0 18px 40px rgba(0, 0, 0, 0.35));
 }
