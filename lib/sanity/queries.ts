@@ -12,6 +12,7 @@ export const postsQuery = `*[_type == "post"] | order(publishedAt desc) {
   "slug": slug.current,
   publishedAt,
   excerpt,
+  body,
   coverImage,
   externalLink
 }`;
