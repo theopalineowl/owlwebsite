@@ -16,9 +16,9 @@ import { CommentsSection } from "@/components/comments/CommentsSection";
 export const revalidate = 60;
 export const dynamicParams = true;
 
-export function generateStaticParams() {
-  return STATIC_BOOK_REVIEWS.map((r) => ({ slug: r.slug }));
-}
+/** Detail hero cover: static files + Sanity use the same frame (max ~384px wide). */
+const REVIEW_DETAIL_COVER_FRAME =
+  "relative w-full max-w-xs sm:max-w-sm mx-auto aspect-[2/3] rounded-xl overflow-hidden mb-10 border border-white/10 bg-white/[0.06] shadow-[0_0_40px_rgba(126,58,237,0.12)]";
 
 export default async function BookReviewDetailPage({
   params,
@@ -44,13 +44,13 @@ export default async function BookReviewDetailPage({
           </FadeInSection>
 
           <FadeInSection delay={60}>
-            <div className="relative w-full max-w-xs sm:max-w-sm mx-auto aspect-[2/3] rounded-xl overflow-hidden mb-10 border border-white/10 bg-white/[0.06] shadow-[0_0_40px_rgba(126,58,237,0.12)]">
+            <div className={REVIEW_DETAIL_COVER_FRAME}>
               <Image
                 src={staticReview.coverSrc}
                 alt={staticReview.title}
                 fill
                 className="object-cover object-top"
-                sizes="(max-width: 768px) 100vw, 20rem"
+                sizes={REVIEW_DETAIL_COVER_SIZES}
                 priority
               />
             </div>
@@ -120,13 +120,16 @@ export default async function BookReviewDetailPage({
         <FadeInSection delay={80}>
           <article className="max-w-5xl mx-auto w-full">
             {review.bookCover ? (
-              <div className="relative w-40 h-60 mx-auto mb-10 rounded-xl overflow-hidden border border-white/10 shadow-[0_0_40px_rgba(126,58,237,0.12)]">
+              <div className={REVIEW_DETAIL_COVER_FRAME}>
                 <Image
-                  src={urlFor(review.bookCover).width(320).height(480).url()}
+                  src={urlFor(review.bookCover)
+                    .width(SANITY_DETAIL_COVER_WIDTH)
+                    .height(Math.round(SANITY_DETAIL_COVER_WIDTH * 1.5))
+                    .url()}
                   alt={review.title}
                   fill
-                  className="object-cover"
-                  sizes="160px"
+                  className="object-cover object-top"
+                  sizes={REVIEW_DETAIL_COVER_SIZES}
                   priority
                 />
               </div>

@@ -2,6 +2,7 @@ import { client } from "@/lib/sanity/client";
 import { siteSettingsQuery } from "@/lib/sanity/queries";
 import { Navbar } from "@/components/layout/Navbar";
 import { Footer } from "@/components/layout/Footer";
+import "@/components/mailerlite/mailerlite-join-form.css";
 
 export default async function SiteLayout({
   children,

@@ -8,6 +8,9 @@ import { Card } from "@/components/ui/Card";
 import { FadeInSection } from "@/components/ui/FadeInSection";
 import { SectionTwinkles } from "@/components/ui/SectionTwinkles";
 import { STATIC_BOOK_REVIEWS } from "@/lib/book-reviews/static-reviews";
+import { listTeaseFromBody } from "@/lib/blog/post-tease";
+
+export const revalidate = 60;
 
 export const revalidate = 60;
 
@@ -41,7 +44,7 @@ export default async function BookReviewsListPage() {
     publishedAt: r.publishedAt,
     bookAuthor: r.bookAuthor,
     rating: r.rating,
-    excerpt: r.excerpt,
+    excerpt: listTeaseFromBody(r.bodyPlaceholder, undefined, r.excerpt),
     localCoverSrc: r.coverSrc,
   }));
 
@@ -89,26 +92,38 @@ export default async function BookReviewsListPage() {
           {reviews.length === 0 ? (
             <p className="text-[var(--text-muted)]">No reviews yet.</p>
           ) : (
-            reviews.map((review, i) =>
-              review.localCoverSrc ? (
+            reviews.map((review, i) => {
+              const cmsThumbUrl = review.bookCover
+                ? urlFor(review.bookCover)
+                    .width(224)
+                    .height(336)
+                    .url()
+                : null;
+              const thumbSrc = review.localCoverSrc ?? cmsThumbUrl;
+
+              return (
                 <FadeInSection key={review._id} delay={100 + i * 50}>
                   <Card
                     href={`/book-reviews/${review.slug}`}
                     variant="dark"
                     className="flex flex-row items-start gap-4 sm:gap-5 md:gap-6 p-4 sm:p-5 md:p-6"
                   >
-                    <div className="relative shrink-0 w-[5.25rem] sm:w-24 md:w-28 aspect-[2/3] rounded-lg overflow-hidden bg-white/10 border border-white/10">
-                      <Image
-                        src={review.localCoverSrc}
-                        alt={review.title}
-                        fill
-                        className="object-contain object-center"
-                        sizes="(max-width: 640px) 84px, (max-width: 1024px) 96px, 112px"
-                        priority={
-                          review.slug === "listening-to-the-wild-weyward"
-                        }
-                      />
-                    </div>
+                    {thumbSrc ? (
+                      <div className="relative shrink-0 w-[5.25rem] sm:w-24 md:w-28 aspect-[2/3] rounded-lg overflow-hidden bg-white/10 border border-white/10">
+                        <Image
+                          src={thumbSrc}
+                          alt={review.title}
+                          fill
+                          className="object-contain object-center"
+                          sizes="(max-width: 640px) 84px, (max-width: 1024px) 96px, 112px"
+                          priority={
+                            review.slug === "listening-to-the-wild-weyward"
+                          }
+                        />
+                      </div>
+                    ) : (
+                      <div className="relative shrink-0 w-[5.25rem] sm:w-24 md:w-28 aspect-[2/3] rounded-lg border border-white/10 bg-white/10" />
+                    )}
                     <div className="min-w-0 flex-1">
                       <h2 className="font-[var(--font-display)] text-lg sm:text-xl font-semibold text-[var(--text-primary)] mb-2 text-pretty leading-snug">
                         {review.title}
@@ -129,53 +144,8 @@ export default async function BookReviewsListPage() {
                     </div>
                   </Card>
                 </FadeInSection>
-              ) : (
-                <FadeInSection key={review._id} delay={100 + i * 50}>
-                  <Card
-                    href={`/book-reviews/${review.slug}`}
-                    variant="dark"
-                    className="block p-5 sm:p-6"
-                  >
-                    <div className="flex flex-col sm:flex-row gap-6">
-                      {review.bookCover ? (
-                        <div className="relative w-[6.5rem] sm:w-24 h-[9.75rem] sm:h-36 shrink-0 rounded-lg overflow-hidden border border-white/10">
-                          <Image
-                            src={urlFor(review.bookCover)
-                              .width(192)
-                              .height(288)
-                              .url()}
-                            alt={review.title}
-                            fill
-                            className="object-cover"
-                            sizes="104px"
-                          />
-                        </div>
-                      ) : (
-                        <div className="w-[6.5rem] sm:w-24 h-[9.75rem] sm:h-36 shrink-0 rounded-lg border border-white/10 bg-white/10" />
-                      )}
-                      <div className="min-w-0 flex-1">
-                        <h2 className="font-[var(--font-display)] text-xl font-semibold text-[var(--text-primary)] mb-1">
-                          {review.title}
-                        </h2>
-                        {review.bookAuthor && (
-                          <p className="text-sm text-[var(--text-muted)] mb-2">
-                            by {review.bookAuthor}
-                          </p>
-                        )}
-                        <p className="text-sm text-[var(--text-muted)] mb-2">
-                          {formatDate(review.publishedAt)} · {review.rating}/5
-                        </p>
-                        {review.excerpt && (
-                          <p className="text-[var(--text-muted)] text-sm leading-relaxed line-clamp-2">
-                            {review.excerpt}
-                          </p>
-                        )}
-                      </div>
-                    </div>
-                  </Card>
-                </FadeInSection>
-              )
-            )
+              );
+            })
           )}
         </div>
       </div>

@@ -2,6 +2,7 @@ import Link from "next/link";
 import Image from "next/image";
 import type { SiteSettings } from "@/lib/sanity/types";
 import { NavTabs } from "@/components/layout/NavTabs";
+import { MobileNav } from "@/components/layout/MobileNav";
 
 const defaultNavLinks = [
   { label: "Home", href: "/" },
@@ -23,7 +24,7 @@ export function Navbar({ settings }: { settings?: SiteSettings | null }) {
   }));
 
   return (
-    <header className="sticky top-0 z-50 bg-[var(--text-primary)]">
+    <header className="relative sticky top-0 z-50 bg-[var(--text-primary)]">
       <nav className="flex items-center justify-between gap-4 py-3 px-4 md:px-8 max-w-7xl mx-auto">
         <Link href="/" className="flex items-center gap-2 shrink-0">
           <span className="inline-flex rounded-full bg-[#f5f0e6] p-0.5 ring-2 ring-[var(--bg-parchment)]/30">
@@ -39,9 +40,10 @@ export function Navbar({ settings }: { settings?: SiteSettings | null }) {
             {settings?.siteTitle || "The Opaline Owl"}
           </span>
         </Link>
-        <div className="flex-1 flex justify-end min-w-0 overflow-x-auto">
+        <div className="hidden md:flex flex-1 justify-end min-w-0">
           <NavTabs links={navLinks} />
         </div>
+        <MobileNav links={navLinks} />
       </nav>
     </header>
   );

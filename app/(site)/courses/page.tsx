@@ -4,6 +4,7 @@ import Image from "next/image";
 import { Section } from "@/components/layout/Section";
 import { SectionTwinkles } from "@/components/ui/SectionTwinkles";
 import { FadeInSection } from "@/components/ui/FadeInSection";
+import { MailerLiteJoinForm } from "@/components/mailerlite/MailerLiteJoinForm";
 
 const introCopy = `There comes a point in many lives when we begin to sense that there is more to our experience than the routines of daily living. A quiet pull toward deeper awareness. A curiosity about the unseen forces that shape our intuition, our sense of meaning, and our connection to the natural world.
 
@@ -168,28 +169,8 @@ export default function CoursesPage() {
           </FadeInSection>
 
           <FadeInSection delay={450}>
-            <div className="text-center">
-              <div className="rounded-2xl border border-white/15 bg-white/[0.04] backdrop-blur-md p-6 max-w-xl mx-auto w-full">
-                <form
-                  className="flex flex-col sm:flex-row gap-3 justify-center"
-                  onSubmit={(e) => e.preventDefault()}
-                >
-                  <input
-                    type="email"
-                    placeholder="Your email"
-                    className="flex-1 min-w-0 rounded-full border border-white/30 bg-white/10 px-5 py-3 text-[var(--text-primary)] placeholder:text-[var(--text-muted)]/70 outline-none transition-all focus-visible:ring-2 focus-visible:ring-[rgba(126,58,237,0.55)] focus-visible:border-transparent"
-                  />
-                  <button
-                    type="submit"
-                    className="shrink-0 inline-flex items-center justify-center rounded-full px-6 py-3 text-sm font-medium text-white bg-gradient-to-r from-violet-600 to-violet-500 shadow-[0_0_20px_rgba(126,58,237,0.3)] hover:shadow-[0_0_28px_rgba(126,58,237,0.4)] hover:-translate-y-0.5 transition-all duration-300 outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-offset-[#0f172a] focus-visible:ring-violet-400 motion-reduce:hover:translate-y-0"
-                  >
-                    Notify me
-                  </button>
-                </form>
-              </div>
-              <p className="mt-6 text-sm text-[var(--text-muted)]">
-                Join the Journey!
-              </p>
+            <div className="w-full max-w-[650px] mx-auto pt-2 px-1 sm:px-0">
+              <MailerLiteJoinForm variant="on-dark" />
             </div>
           </FadeInSection>
         </div>
