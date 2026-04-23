@@ -1,5 +1,5 @@
 import { revalidatePath } from "next/cache";
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
 import { parseBody } from "next-sanity/webhook";
 
 type SanityWebhookBody = {
@@ -7,7 +7,7 @@ type SanityWebhookBody = {
   slug?: { current?: string } | string | null;
 };
 
-export async function POST(req: Request) {
+export async function POST(req: NextRequest) {
   const secret = process.env.SANITY_REVALIDATE_SECRET;
   if (!secret) {
     return NextResponse.json(
