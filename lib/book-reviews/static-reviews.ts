@@ -12,7 +12,8 @@ export type StaticBookReviewDetail = {
   publishedAt: string;
   coverSrc: string;
   rating: number;
-  excerpt: string;
+  /** Optional override; list page tease is derived from `bodyPlaceholder` when set. */
+  excerpt?: string;
   /** Full-review page body placeholder */
   bodyPlaceholder: string;
 };
@@ -28,8 +29,6 @@ export const STATIC_BOOK_REVIEWS: StaticBookReviewDetail[] = [
     publishedAt: "2026-04-09T12:00:00.000Z",
     coverSrc: WEYWARD_COVER_SRC,
     rating: 5,
-    excerpt:
-      "Summary placeholder: Weyward braids three voices across centuries—women bound by blood, intuition, and the pull of the more-than-human world. This piece opens a door to Hart’s lush, spellbound storytelling and why the wild refuses to stay quiet. (Replace with your summary.)",
     bodyPlaceholder: `Every now and then a novel finds its way into your hands at exactly the right moment. The timing feels almost intentional, as if the story itself were patiently waiting until you were ready to hear what it had to say. That is how it felt when I began reading Weyward by Emilia Hart.
 At first glance, Weyward is simply an engaging and beautifully written novel about three women living in different time periods, all connected through a mysterious family lineage. The narrative moves between the seventeenth century, the mid-twentieth century, and the present day, weaving together the lives of women who have all, in their own ways, been constrained by the expectations and limitations placed upon them. Yet threaded through their stories is something far older and deeper: a quiet, almost instinctive connection to the natural world.
 This connection is what the villagers around them would call witchcraft.

@@ -32,11 +32,11 @@ function makeComponents(
   return {
     block: {
       normal: ({ children }) => (
-        <p className={`mb-4 leading-relaxed ${body}`}>{children}</p>
+        <p className={`mb-6 last:mb-0 leading-[1.75] ${body}`}>{children}</p>
       ),
       h2: ({ children }) => (
         <h2
-          className={`font-[var(--font-display)] font-semibold ${heading} mt-8 mb-4 ${
+          className={`font-[var(--font-display)] font-semibold ${heading} mt-10 mb-5 last:mb-0 ${
             tone === "onParchment"
               ? h2Size
               : "text-2xl"
@@ -47,7 +47,7 @@ function makeComponents(
       ),
       h3: ({ children }) => (
         <h3
-          className={`font-[var(--font-display)] font-semibold ${heading} mt-6 mb-3 ${
+          className={`font-[var(--font-display)] font-semibold ${heading} mt-8 mb-4 last:mb-0 ${
             tone === "onParchment"
               ? h3Size
               : "text-xl"
@@ -59,12 +59,12 @@ function makeComponents(
     },
     list: {
       bullet: ({ children }) => (
-        <ul className={`list-disc list-inside mb-4 space-y-1 ${body}`}>
+        <ul className={`list-disc list-inside mb-6 last:mb-0 space-y-2 ${body}`}>
           {children}
         </ul>
       ),
       number: ({ children }) => (
-        <ol className={`list-decimal list-inside mb-4 space-y-1 ${body}`}>
+        <ol className={`list-decimal list-inside mb-6 last:mb-0 space-y-2 ${body}`}>
           {children}
         </ol>
       ),

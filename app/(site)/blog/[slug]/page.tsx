@@ -68,10 +68,19 @@ export default async function BlogPostPage({
                 {formatDate(staticPost.publishedAt)}
               </p>
               <div className="border-t border-white/10 mb-10" aria-hidden />
-              <div className="prose prose-lg max-w-none">
-                <p className="text-[var(--text-muted)] leading-relaxed whitespace-pre-wrap">
-                  {staticPost.bodyPlaceholder}
-                </p>
+              <div className="max-w-none space-y-6">
+                {staticPost.bodyPlaceholder
+                  .split(/\n+/)
+                  .map((s) => s.trim())
+                  .filter(Boolean)
+                  .map((para, i) => (
+                    <p
+                      key={i}
+                      className="text-[var(--text-muted)] leading-[1.75] text-pretty"
+                    >
+                      {para}
+                    </p>
+                  ))}
               </div>
               <CommentsSection targetType="blog" slug={slug} />
             </div>
@@ -143,7 +152,7 @@ export default async function BlogPostPage({
             )}
             <div className="border-t border-white/10 mb-10" aria-hidden />
             {hasBody && post.body ? (
-              <div className="prose prose-lg max-w-none">
+              <div className="max-w-none">
                 <PortableText value={post.body} tone="onDark" />
               </div>
             ) : (

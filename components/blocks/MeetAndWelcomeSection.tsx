@@ -139,8 +139,8 @@ export function MeetAndWelcomeSection({
                         <div className="relative w-14 h-20 shrink-0 rounded overflow-hidden">
                           <Image
                             src={urlFor(review.bookCover)
-                              .width(56)
-                              .height(80)
+                              .width(112)
+                              .height(168)
                               .url()}
                             alt={review.title}
                             fill
