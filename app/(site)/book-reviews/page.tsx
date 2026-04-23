@@ -9,6 +9,8 @@ import { FadeInSection } from "@/components/ui/FadeInSection";
 import { SectionTwinkles } from "@/components/ui/SectionTwinkles";
 import { STATIC_BOOK_REVIEWS } from "@/lib/book-reviews/static-reviews";
 
+export const revalidate = 60;
+
 const intro =
   "My take on witchy fiction and mystical texts. Join in the discussion by leaving your own comments and send me recommendations of what to read next.";
 

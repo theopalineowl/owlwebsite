@@ -13,6 +13,9 @@ import {
 } from "@/lib/book-reviews/static-reviews";
 import { CommentsSection } from "@/components/comments/CommentsSection";
 
+export const revalidate = 60;
+export const dynamicParams = true;
+
 export function generateStaticParams() {
   return STATIC_BOOK_REVIEWS.map((r) => ({ slug: r.slug }));
 }
