@@ -52,7 +52,7 @@ export function MobileNav({ links }: { links: NavLink[] }) {
   const panelId = useId();
 
   useEffect(() => {
-    setOpen(false);
+    queueMicrotask(() => setOpen(false));
   }, [pathname]);
 
   useEffect(() => {

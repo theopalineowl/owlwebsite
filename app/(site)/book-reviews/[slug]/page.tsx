@@ -16,9 +16,19 @@ import { CommentsSection } from "@/components/comments/CommentsSection";
 export const revalidate = 60;
 export const dynamicParams = true;
 
+export function generateStaticParams() {
+  return STATIC_BOOK_REVIEWS.map((r) => ({ slug: r.slug }));
+}
+
 /** Detail hero cover: static files + Sanity use the same frame (max ~384px wide). */
 const REVIEW_DETAIL_COVER_FRAME =
   "relative w-full max-w-xs sm:max-w-sm mx-auto aspect-[2/3] rounded-xl overflow-hidden mb-10 border border-white/10 bg-white/[0.06] shadow-[0_0_40px_rgba(126,58,237,0.12)]";
+
+const REVIEW_DETAIL_COVER_SIZES =
+  "(max-width: 640px) min(calc(100vw - 3rem), 20rem), 24rem";
+
+/** ~2× display width for retina (max-w-sm = 24rem ≈ 384px). */
+const SANITY_DETAIL_COVER_WIDTH = 768;
 
 export default async function BookReviewDetailPage({
   params,

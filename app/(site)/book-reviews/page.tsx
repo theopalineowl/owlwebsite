@@ -12,8 +12,6 @@ import { listTeaseFromBody } from "@/lib/blog/post-tease";
 
 export const revalidate = 60;
 
-export const revalidate = 60;
-
 const intro =
   "My take on witchy fiction and mystical texts. Join in the discussion by leaving your own comments and send me recommendations of what to read next.";
 
