@@ -7,6 +7,8 @@ import { SectionTwinkles } from "@/components/ui/SectionTwinkles";
 import { STATIC_BLOG_POSTS } from "@/lib/blog/static-posts";
 import { listTeaseFromBody } from "@/lib/blog/post-tease";
 
+export const revalidate = 60;
+
 const intro =
   "An exploration of ideas, rituals, tools, and daily practices.";
 

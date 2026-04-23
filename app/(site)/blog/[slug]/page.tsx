@@ -12,6 +12,9 @@ import {
 } from "@/lib/blog/static-posts";
 import { CommentsSection } from "@/components/comments/CommentsSection";
 
+export const revalidate = 60;
+export const dynamicParams = true;
+
 export function generateStaticParams() {
   return STATIC_BLOG_POSTS.map((p) => ({ slug: p.slug }));
 }
