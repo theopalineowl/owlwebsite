@@ -75,6 +75,29 @@ export default function ContactPage() {
                     </span>
                   </a>
                 </div>
+
+                <div className="border-t border-white/10 pt-8">
+                  <p className="text-xs font-medium uppercase tracking-[0.2em] text-violet-300/80 mb-3">
+                    Facebook
+                  </p>
+                  <a
+                    href="https://www.facebook.com/share/1NSjdTwaic/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-3 text-[var(--text-primary)] hover:text-violet-200 transition-colors group"
+                  >
+                    <Image
+                      src="/images/facebookicon.png"
+                      alt=""
+                      width={36}
+                      height={36}
+                      className="size-9 shrink-0 rounded-full object-cover ring-1 ring-white/15 group-hover:ring-violet-400/40 transition-[box-shadow] group-hover:shadow-[0_0_16px_rgba(126,58,237,0.35)]"
+                    />
+                    <span className="font-[var(--font-body)] text-base md:text-lg underline-offset-4 group-hover:underline">
+                      The Opaline Owl Page
+                    </span>
+                  </a>
+                </div>
               </div>
             </div>
           </FadeInSection>
