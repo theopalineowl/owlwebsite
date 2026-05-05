@@ -4,7 +4,7 @@ export type FlipBookPage =
   | { kind: "text"; text: string }
   | { kind: "blocks"; blocks: PortableTextBlock[] };
 
-const DEFAULT_WORDS = 108;
+const DEFAULT_WORDS = 100;
 
 export function countWords(text: string): number {
   const m = text.trim().match(/\S+/g);
