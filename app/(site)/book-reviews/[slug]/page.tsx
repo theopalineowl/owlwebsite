@@ -93,7 +93,9 @@ export default async function BookReviewDetailPage({
                 pages={pages}
               />
 
-              <CommentsSection targetType="bookReview" slug={slug} />
+              <div className="mt-16 max-md:mt-24">
+                <CommentsSection targetType="bookReview" slug={slug} />
+              </div>
             </article>
           </FadeInSection>
         </div>
@@ -174,7 +176,9 @@ export default async function BookReviewDetailPage({
               pages={pages}
             />
 
-            <CommentsSection targetType="bookReview" slug={slug} />
+            <div className="mt-16 max-md:mt-24">
+              <CommentsSection targetType="bookReview" slug={slug} />
+            </div>
           </article>
         </FadeInSection>
       </div>
