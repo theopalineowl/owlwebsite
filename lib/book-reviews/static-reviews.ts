@@ -1,7 +1,7 @@
 import type { ReviewListItem } from "@/lib/sanity/types";
 
-/** Local image in /public (URL-encoded spaces). */
-export const WEYWARD_COVER_SRC = "/images/Book%20Review%20Weyward.jpg";
+/** Local image in /public — use literal path; Next/Image encodes once. */
+export const WEYWARD_COVER_SRC = "/images/Book Review Weyward.jpg";
 
 export type StaticBookReviewDetail = {
   kind: "static";

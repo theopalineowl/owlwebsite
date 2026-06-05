@@ -115,7 +115,7 @@ export default async function BlogListPage() {
                         fill
                         className="object-contain object-center"
                         sizes="(max-width: 640px) 84px, (max-width: 1024px) 96px, 112px"
-                        priority={post.slug === "the-fig-tree"}
+                        priority={i === 0}
                       />
                     </div>
                     <div className="min-w-0 flex-1">

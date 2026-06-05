@@ -83,11 +83,6 @@ export default async function BookReviewDetailPage({
                       {formatDate(staticReview.publishedAt)} ·{" "}
                       {staticReview.rating}/5
                     </p>
-                    <p className="text-center text-xs text-[#1a140c]/60">
-                      Turn pages with the corner curls or the buttons below.
-                      On desktop, scroll inside the pages or use the center
-                      slider when the spread overflows.
-                    </p>
                   </>
                 }
                 pages={pages}
@@ -166,11 +161,6 @@ export default async function BookReviewDetailPage({
                       {review.excerpt}
                     </p>
                   )}
-                  <p className="text-center text-xs text-[#1a140c]/60">
-                    Turn pages with the corner curls or the buttons below. On
-                    desktop, scroll inside the pages or use the center slider
-                    when the spread overflows.
-                  </p>
                 </>
               }
               pages={pages}

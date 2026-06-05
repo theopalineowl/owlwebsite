@@ -233,10 +233,29 @@ function syncFromRef(
   setPageCount(api.getPageCount());
 }
 
+const COMPACT_READER_QUERY = "(max-width: 1023px)";
+
+function ReadingHint({ compact }: { compact: boolean }) {
+  if (compact) {
+    return (
+      <p className="text-center text-xs text-[#1a140c]/60">
+        Use Previous and Next below to turn pages.
+      </p>
+    );
+  }
+
+  return (
+    <p className="text-center text-xs text-[#1a140c]/60">
+      Turn pages with the corner curls or the buttons below. On desktop, scroll
+      inside the pages or use the center slider when the spread overflows.
+    </p>
+  );
+}
+
 /**
- * Mobile-only reader. PageFlip uses absolute positioning everywhere, which is
+ * Phone + tablet reader. PageFlip uses absolute positioning everywhere, which is
  * incompatible with `height: auto` — that's why expanded pages collapsed.
- * On phones we render a single parchment column instead.
+ * Below 1024px we render a single parchment column instead.
  */
 function MobileReader({
   header,
@@ -324,9 +343,9 @@ export function FlipBook({ header, pages }: FlipBookProps) {
   const bookRef = useRef<FlipBookHandle | null>(null);
   const scrollLock = useRef(false);
 
-  const isMobile = useMediaQuery("(max-width: 767px)");
-  /** Mobile has its own reader; PageFlip view gets native scrollbars on web + iPad. */
-  const showPageScrollbar = !isMobile;
+  const isCompactReader = useMediaQuery(COMPACT_READER_QUERY);
+  /** Compact reader uses MobileReader; PageFlip gets native scrollbars on desktop. */
+  const showPageScrollbar = !isCompactReader;
   const reduceMotion = useMediaQuery("(prefers-reduced-motion: reduce)");
 
   const [pageIdx, setPageIdx] = useState(0);
@@ -395,7 +414,7 @@ export function FlipBook({ header, pages }: FlipBookProps) {
   }, [measureGutter]);
 
   const goNext = useCallback(() => {
-    if (isMobile) {
+    if (isCompactReader) {
       setPageIdx((i) => Math.min(i + 1, pages.length));
       return;
     }
@@ -415,10 +434,10 @@ export function FlipBook({ header, pages }: FlipBookProps) {
       measureGutter();
       restoreWindowScroll(scrollX, scrollY);
     });
-  }, [isMobile, pages.length, reduceMotion, measureGutter]);
+  }, [isCompactReader, pages.length, reduceMotion, measureGutter]);
 
   const goPrev = useCallback(() => {
-    if (isMobile) {
+    if (isCompactReader) {
       setPageIdx((i) => Math.max(i - 1, 0));
       return;
     }
@@ -438,7 +457,7 @@ export function FlipBook({ header, pages }: FlipBookProps) {
       measureGutter();
       restoreWindowScroll(scrollX, scrollY);
     });
-  }, [isMobile, reduceMotion, measureGutter]);
+  }, [isCompactReader, reduceMotion, measureGutter]);
 
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
@@ -505,7 +524,7 @@ export function FlipBook({ header, pages }: FlipBookProps) {
         });
       });
     };
-  }, [pages.length, isMobile, pageIdx]);
+  }, [pages.length, isCompactReader, pageIdx]);
 
   useEffect(() => {
     const el = wrapperRef.current;
@@ -529,11 +548,11 @@ export function FlipBook({ header, pages }: FlipBookProps) {
       ro.disconnect();
       window.removeEventListener("resize", measureBookBox);
     };
-  }, [measureGutter, measureBookBox, pages.length, isMobile, pageIdx]);
+  }, [measureGutter, measureBookBox, pages.length, isCompactReader, pageIdx]);
 
   /** Trackpad/wheel: scroll the visible spread directly. Bypasses StPageFlip's stacked layers. */
   useEffect(() => {
-    if (isMobile) return;
+    if (isCompactReader) return;
 
     const el = wrapperRef.current?.querySelector(
       ".flipbook-book-frame",
@@ -587,7 +606,7 @@ export function FlipBook({ header, pages }: FlipBookProps) {
     el.addEventListener("wheel", onWheel, { passive: false });
 
     return () => el.removeEventListener("wheel", onWheel as EventListener);
-  }, [pages.length, isMobile, pageIdx]);
+  }, [pages.length, isCompactReader, pageIdx]);
 
   const onFlip = useCallback(
     (e: { data?: unknown }) => {
@@ -676,13 +695,20 @@ export function FlipBook({ header, pages }: FlipBookProps) {
     });
   }, []);
 
-  /** On mobile pageCount comes from props (header + pages); desktop is reported by PageFlip. */
-  const effectivePageCount = isMobile ? pages.length + 1 : pageCount;
+  const headerWithHint = (
+    <>
+      {header}
+      <ReadingHint compact={isCompactReader} />
+    </>
+  );
+
+  /** On compact reader pageCount comes from props (header + pages); desktop is reported by PageFlip. */
+  const effectivePageCount = isCompactReader ? pages.length + 1 : pageCount;
   const safePageIdx = Math.max(0, Math.min(pageIdx, Math.max(0, effectivePageCount - 1)));
   const canPrev = safePageIdx > 0;
   const canNext = effectivePageCount > 0 && safePageIdx < effectivePageCount - 1;
 
-  const showGutter = !isMobile && gutterMax > 0;
+  const showGutter = !isCompactReader && gutterMax > 0;
   const gutterSliderValue = Math.min(gutterValue, gutterMax);
 
   const flipProps = {
@@ -696,7 +722,7 @@ export function FlipBook({ header, pages }: FlipBookProps) {
     maxHeight: 670,
     drawShadow: true,
     flippingTime,
-    usePortrait: isMobile,
+    usePortrait: isCompactReader,
     startZIndex: 0,
     autoSize: true,
     maxShadowOpacity: 0.45,
@@ -716,11 +742,11 @@ export function FlipBook({ header, pages }: FlipBookProps) {
     onInit,
   };
 
-  if (isMobile) {
+  if (isCompactReader) {
     return (
       <div ref={wrapperRef} className="flipbook-wrapper mx-auto w-full max-w-5xl">
         <MobileReader
-          header={header}
+          header={headerWithHint}
           pages={pages}
           pageIdx={safePageIdx}
           pageCount={effectivePageCount}
@@ -768,7 +794,7 @@ export function FlipBook({ header, pages }: FlipBookProps) {
               className={`flipbook-page-inner${showPageScrollbar ? " flipbook-page-inner--scrollbar" : ""}`}
               onScroll={handleInnerScroll}
             >
-              {header}
+              {headerWithHint}
             </div>
           </div>
 

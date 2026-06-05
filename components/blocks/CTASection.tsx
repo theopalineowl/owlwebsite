@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Section } from "@/components/layout/Section";
 import { Button } from "@/components/ui/Button";
 import { SectionTwinkles } from "@/components/ui/SectionTwinkles";
+import { motionViewportOnce } from "@/lib/motion/viewport";
 
 export function CTASection() {
   return (
@@ -18,7 +19,7 @@ export function CTASection() {
           className="text-[var(--text-muted)] mb-4 font-[var(--font-body)]"
           initial={{ opacity: 0, y: 10, filter: "blur(6px)" }}
           whileInView={{ opacity: 1, y: 0, filter: "blur(0px)" }}
-          viewport={{ once: true, margin: "-40px" }}
+          viewport={motionViewportOnce}
           transition={{ duration: 0.65, ease: [0.22, 1, 0.36, 1] }}
         >
           Ready to begin?
@@ -26,7 +27,7 @@ export function CTASection() {
         <motion.div
           initial={{ opacity: 0, scale: 0.94 }}
           whileInView={{ opacity: 1, scale: 1 }}
-          viewport={{ once: true, margin: "-40px" }}
+          viewport={motionViewportOnce}
           transition={{ type: "spring", stiffness: 200, damping: 22, delay: 0.1 }}
         >
           <span className="cta-button-glow inline-flex rounded-full">

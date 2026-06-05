@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Section } from "@/components/layout/Section";
 import { DividerOrnament } from "@/components/ui/DividerOrnament";
 import { SectionTwinkles } from "@/components/ui/SectionTwinkles";
+import { motionViewportOnce } from "@/lib/motion/viewport";
 
 const benefits: { label: string; icon: string }[] = [
   { label: "Guidance", icon: "/images/Crystal Ball.svg" },
@@ -41,7 +42,7 @@ export function BenefitsSection() {
           className="font-[var(--font-display)] text-4xl md:text-5xl font-semibold text-[var(--text-primary)] text-center mb-5 md:mb-6"
           initial={{ opacity: 0, y: 12 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-60px" }}
+          viewport={motionViewportOnce}
           transition={{ duration: 0.5, ease: "easeOut" }}
         >
           Benefits Of Connecting With Source Energy
@@ -51,7 +52,7 @@ export function BenefitsSection() {
           variants={container}
           initial="hidden"
           whileInView="show"
-          viewport={{ once: true, margin: "-40px" }}
+          viewport={motionViewportOnce}
         >
           {benefits.map(({ label, icon }) => (
             <motion.span

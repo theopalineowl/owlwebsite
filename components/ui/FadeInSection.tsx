@@ -1,6 +1,19 @@
 "use client";
 
-import { useRef, useEffect, useState } from "react";
+import { useRef, useEffect, useState, useSyncExternalStore } from "react";
+
+function usePrefersReducedMotion(): boolean {
+  return useSyncExternalStore(
+    (onChange) => {
+      if (typeof window === "undefined") return () => {};
+      const mq = window.matchMedia("(prefers-reduced-motion: reduce)");
+      mq.addEventListener("change", onChange);
+      return () => mq.removeEventListener("change", onChange);
+    },
+    () => window.matchMedia("(prefers-reduced-motion: reduce)").matches,
+    () => false,
+  );
+}
 
 type Props = {
   children: React.ReactNode;
@@ -15,27 +28,53 @@ export function FadeInSection({
   delay = 0,
 }: Props) {
   const ref = useRef<HTMLDivElement>(null);
-  const [visible, setVisible] = useState(false);
+  const prefersReducedMotion = usePrefersReducedMotion();
+  const [visible, setVisible] = useState(prefersReducedMotion);
 
   useEffect(() => {
+    if (prefersReducedMotion) return;
+
     const el = ref.current;
     if (!el) return;
-    let timeoutId: ReturnType<typeof setTimeout> | null = null;
+
+    let delayId: ReturnType<typeof setTimeout> | null = null;
+    let fallbackId: ReturnType<typeof setTimeout> | null = null;
+    let shown = false;
+
+    const reveal = () => {
+      if (shown) return;
+      shown = true;
+      if (delay) delayId = setTimeout(() => setVisible(true), delay);
+      else setVisible(true);
+    };
+
+    const inViewport = () => {
+      const rect = el.getBoundingClientRect();
+      const vh = window.innerHeight || document.documentElement.clientHeight;
+      return rect.top < vh && rect.bottom > 0;
+    };
+
+    if (inViewport()) reveal();
+
     const obs = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
-          if (delay) timeoutId = setTimeout(() => setVisible(true), delay);
-          else setVisible(true);
+          reveal();
+          obs.disconnect();
         }
       },
-      { threshold: 0.08, rootMargin: "0px 0px -40px 0px" }
+      { threshold: 0.05, rootMargin: "0px 0px 0px 0px" }
     );
     obs.observe(el);
+
+    fallbackId = setTimeout(reveal, 1200 + delay);
+
     return () => {
       obs.disconnect();
-      if (timeoutId) clearTimeout(timeoutId);
+      if (delayId) clearTimeout(delayId);
+      if (fallbackId) clearTimeout(fallbackId);
     };
-  }, [delay]);
+  }, [delay, prefersReducedMotion]);
 
   return (
     <div

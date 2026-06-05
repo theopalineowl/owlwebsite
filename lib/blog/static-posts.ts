@@ -1,7 +1,7 @@
-/** Local image in /public (URL-encoded spaces). */
-export const FIG_TREE_COVER_SRC = "/images/Blog%20Fig%20tree%201.jpg";
+/** Local images in /public — use literal paths; Next/Image encodes once. */
+export const FIG_TREE_COVER_SRC = "/images/Blog Fig tree 1.jpg";
 export const SIGNS_SYNCHRONICITIES_COVER_SRC =
-  "/images/Blog%20signs%20and%20synchronicities.jpg";
+  "/images/Blog signs and synchronicities.jpg";
 
 export type StaticBlogPostDetail = {
   kind: "static";

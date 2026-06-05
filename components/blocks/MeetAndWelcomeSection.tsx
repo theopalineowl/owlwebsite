@@ -9,6 +9,7 @@ import { SectionTwinkles } from "@/components/ui/SectionTwinkles";
 import { urlFor } from "@/lib/sanity/image";
 import { formatDate } from "@/lib/sanity/format";
 import type { ReviewListItem } from "@/lib/sanity/types";
+import { motionViewportOnce } from "@/lib/motion/viewport";
 
 const welcomeBodyCopy = `Here, spirituality is both mystical and grounded: rooted in balance, awareness, and practices that meet you where you are.`;
 
@@ -17,7 +18,7 @@ const MotionLink = motion.create(Link);
 const springIntro = {
   initial: { opacity: 0, y: 18 },
   whileInView: { opacity: 1, y: 0 },
-  viewport: { once: true, margin: "-50px" },
+  viewport: motionViewportOnce,
   transition: { type: "spring" as const, stiffness: 120, damping: 22 },
 };
 
@@ -48,7 +49,7 @@ export function MeetAndWelcomeSection({
               className="flex justify-center px-1"
               initial={{ opacity: 0, scale: 0.94 }}
               whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true, margin: "-40px" }}
+              viewport={motionViewportOnce}
               transition={{ type: "spring", stiffness: 100, damping: 20 }}
             >
               <div className="relative aspect-square w-[min(20rem,85vw)] shrink-0 md:w-[min(24rem,42vw)] lg:w-[26rem]">
@@ -72,7 +73,7 @@ export function MeetAndWelcomeSection({
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: "-60px" }}
+              viewport={motionViewportOnce}
               transition={{ type: "spring", stiffness: 110, damping: 24 }}
             >
               <h2 className="font-[var(--font-display)] text-3xl md:text-4xl font-semibold text-[var(--text-primary)] mb-4">
@@ -100,7 +101,7 @@ export function MeetAndWelcomeSection({
                 className="flex flex-col gap-4"
                 initial="hidden"
                 whileInView="show"
-                viewport={{ once: true, margin: "-30px" }}
+                viewport={motionViewportOnce}
                 variants={{
                   hidden: {},
                   show: {
@@ -168,7 +169,7 @@ export function MeetAndWelcomeSection({
               className="relative aspect-[3/4] mx-auto w-full max-w-[16.0625rem] md:mx-0 md:ml-auto md:mr-0 md:max-w-none md:w-[67%] rounded-xl overflow-hidden bg-[#374151] shadow-[var(--shadow-lift)]"
               initial={{ opacity: 0, x: 32 }}
               whileInView={{ opacity: 1, x: 0 }}
-              viewport={{ once: true, margin: "-60px" }}
+              viewport={motionViewportOnce}
               transition={{ type: "spring", stiffness: 95, damping: 22 }}
             >
               <Image

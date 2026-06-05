@@ -114,9 +114,7 @@ export default async function BookReviewsListPage() {
                           fill
                           className="object-contain object-center"
                           sizes="(max-width: 640px) 84px, (max-width: 1024px) 96px, 112px"
-                          priority={
-                            review.slug === "listening-to-the-wild-weyward"
-                          }
+                          priority={i === 0}
                         />
                       </div>
                     ) : (

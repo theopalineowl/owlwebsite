@@ -16,7 +16,7 @@ import {
   aboutStoryParagraphs,
 } from "./about-copy";
 
-const MOON_SVG = "/images/Crescent%20Moon%20and%20Star.svg";
+const MOON_SVG = "/images/Crescent Moon and Star.svg";
 
 const pillars: TarotPillar[] = [
   {
@@ -40,7 +40,7 @@ const pillars: TarotPillar[] = [
     title: "Decoding signs and synchronicities",
     description:
       "Noticing meaningful patterns as you deepen your connection to Source.",
-    iconSrc: "/images/Third%20Eye%20copy.svg",
+    iconSrc: "/images/Third Eye copy.svg",
     photoSrc: "/images/2.png",
   },
 ];

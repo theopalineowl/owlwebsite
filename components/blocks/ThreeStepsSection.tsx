@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { Section } from "@/components/layout/Section";
 import { DividerOrnament } from "@/components/ui/DividerOrnament";
 import { SectionTwinkles } from "@/components/ui/SectionTwinkles";
+import { motionViewportOnce } from "@/lib/motion/viewport";
 
 const STEP_ICONS = [
   "/images/016-meditation.svg",
@@ -60,7 +61,7 @@ export function ThreeStepsSection() {
           className="font-[var(--font-display)] text-4xl md:text-6xl font-semibold text-[var(--text-primary)] text-center mb-8 md:mb-10"
           initial={{ opacity: 0, y: 16 }}
           whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
+          viewport={motionViewportOnce}
           transition={{ duration: 0.55, ease: [0.22, 1, 0.36, 1] }}
         >
           Three Steps to Connect with Source Energy
@@ -70,7 +71,7 @@ export function ThreeStepsSection() {
           variants={container}
           initial="hidden"
           whileInView="show"
-          viewport={{ once: true, margin: "-60px" }}
+          viewport={motionViewportOnce}
         >
           {steps.map((step, i) => (
             <motion.div
