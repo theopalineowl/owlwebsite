@@ -30,6 +30,9 @@ export default defineConfig({
             S.listItem()
               .title("Book Reviews")
               .child(S.documentTypeList("review").title("Book Reviews")),
+            S.listItem()
+              .title("Resources")
+              .child(S.documentTypeList("resource").title("Resources")),
           ]),
     }),
     // Optional: add visionTool() and install @sanity/vision for GROQ playground

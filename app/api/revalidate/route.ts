@@ -49,6 +49,15 @@ export async function POST(req: NextRequest) {
         revalidatePath(`/blog/${slugValue}`);
         revalidated.push(`/blog/${slugValue}`);
       }
+    } else if (type === "resource") {
+      revalidatePath("/resources");
+      revalidated.push("/resources");
+      if (slugValue) {
+        revalidatePath(`/resources/${slugValue}`);
+        revalidated.push(`/resources/${slugValue}`);
+        revalidatePath(`/resources/${slugValue}/download`);
+        revalidated.push(`/resources/${slugValue}/download`);
+      }
     } else {
       revalidatePath("/", "layout");
       revalidated.push("/ (layout)");

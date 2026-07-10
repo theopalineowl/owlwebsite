@@ -59,3 +59,23 @@ export const featuredReviewsQuery = `*[_type == "review"] | order(publishedAt de
   bookCover,
   rating
 }`;
+
+export const resourcesQuery = `*[_type == "resource"] | order(publishedAt desc) {
+  _id,
+  title,
+  "slug": slug.current,
+  publishedAt,
+  description,
+  "fileUrl": file.asset->url,
+  "fileExtension": file.asset->extension
+}`;
+
+export const resourceBySlugQuery = `*[_type == "resource" && slug.current == $slug][0]{
+  _id,
+  title,
+  "slug": slug.current,
+  publishedAt,
+  description,
+  "fileUrl": file.asset->url,
+  "fileExtension": file.asset->extension
+}`;

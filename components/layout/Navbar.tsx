@@ -9,6 +9,7 @@ const defaultNavLinks = [
   { label: "About", href: "/about" },
   { label: "The Journey", href: "/courses" },
   { label: "Blog", href: "/blog" },
+  { label: "Resources", href: "/resources" },
   { label: "Book Reviews", href: "/book-reviews" },
   { label: "Contact", href: "/contact" },
 ];

@@ -2,6 +2,8 @@ import Link from "next/link";
 
 type CardProps = {
   href?: string;
+  /** Use a native anchor (e.g. file downloads) instead of Next.js Link */
+  download?: boolean;
   children: React.ReactNode;
   className?: string;
   /** Glass card on nebula background (home-dark) */
@@ -10,6 +12,7 @@ type CardProps = {
 
 export function Card({
   href,
+  download = false,
   children,
   className = "",
   variant = "light",
@@ -20,6 +23,13 @@ export function Card({
       : "rounded-lg bg-white/80 p-6 shadow-[var(--shadow-soft)] transition-shadow hover:shadow-[var(--shadow-lift)]";
   const cn = `${base} ${className}`.trim();
   if (href) {
+    if (download) {
+      return (
+        <a href={href} download className={cn}>
+          {children}
+        </a>
+      );
+    }
     return (
       <Link href={href} className={cn}>
         {children}
