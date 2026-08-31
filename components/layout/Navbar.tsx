@@ -8,6 +8,7 @@ const defaultNavLinks = [
   { label: "Home", href: "/" },
   { label: "About", href: "/about" },
   { label: "The Journey", href: "/courses" },
+  { label: "Shop", href: "/shop" },
   { label: "Blog", href: "/blog" },
   { label: "Resources", href: "/resources" },
   { label: "Book Reviews", href: "/book-reviews" },
