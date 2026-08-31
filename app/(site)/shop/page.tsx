@@ -33,13 +33,13 @@ export default function ShopPage() {
         </FadeInSection>
 
         <FadeInSection delay={40}>
-          <div className="relative mb-8 md:mb-10 aspect-[16/10] md:aspect-[2/1] w-full overflow-hidden rounded-xl border border-white/15 shadow-[0_0_40px_rgba(126,58,237,0.12)]">
+          <div className="relative mx-auto mb-8 md:mb-10 aspect-[16/10] w-full max-w-xl overflow-hidden rounded-xl border border-white/15 shadow-[0_0_40px_rgba(126,58,237,0.12)]">
             <Image
               src="/Shop/home.jpg"
               alt="The Opaline Owl Mystical Forest Oracle cards spread on a wooden table with candles and crystals"
               fill
               priority
-              sizes="(min-width: 1024px) 72rem, 100vw"
+              sizes="(min-width: 768px) 36rem, 100vw"
               className="object-cover object-[center_42%]"
             />
           </div>
